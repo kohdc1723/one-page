@@ -7,10 +7,9 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  console.log("dash")
   return (
     <NavbarWrapper>
-      <main>
+      <main className="mt-12 ml-0 md:mt-0 md:ml-40">
         {children}
       </main>
     </NavbarWrapper>

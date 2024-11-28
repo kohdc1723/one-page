@@ -2,6 +2,8 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import TopNavbar from "./top-navbar";
+import SideNavbar from "./side-navbar";
 
 interface NavbarWrapperProps {
   children: ReactNode;
@@ -29,8 +31,8 @@ export default function NavbarWrapper({ children }: NavbarWrapperProps) {
 
   if (isAboveMedium) {
     return (
-      <div>
-        <div>isAboveMedium</div>
+      <div className="">
+        <SideNavbar />
         {children}
       </div>
     );
@@ -38,7 +40,7 @@ export default function NavbarWrapper({ children }: NavbarWrapperProps) {
   
   return (
     <div>
-      <div>isBelowMedium</div>
+      <TopNavbar />
       {children}
     </div>
   );
