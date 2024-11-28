@@ -7,6 +7,7 @@ import { IoMenuSharp } from "react-icons/io5";
 import { navItems } from "@/constants/nav-items";
 
 export default function Navbar() {
+  console.log("navbar")
   const [open, setOpen] = useState(false);
 
   const handleClickMenu = () => setOpen(prev => !prev);

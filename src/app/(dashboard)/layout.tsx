@@ -1,18 +1,18 @@
 import { ReactNode } from "react";
 
-import Navbar from "../../components/(dashboard)/navbar";
+import NavbarWrapper from "@/components/(dashboard)/navbar-wrapper";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  console.log("dash")
   return (
-    <div className="relative">
-      <Navbar />
-      <main className="mt-12 md:ml-12">
+    <NavbarWrapper>
+      <main>
         {children}
       </main>
-    </div>
+    </NavbarWrapper>
   );
 }
