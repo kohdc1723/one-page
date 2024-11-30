@@ -1,0 +1,1 @@
+export const MEDIUM = "768px";

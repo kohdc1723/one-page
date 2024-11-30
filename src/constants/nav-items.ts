@@ -1,22 +1,31 @@
-export const navItems = [
+import { IconType } from "react-icons/lib";
+import { CgHomeAlt, CgViewList, CgFile, CgFileDocument } from "react-icons/cg";
+
+interface NavItem {
+  title: string;
+  href: string;
+  icon: IconType;
+}
+
+export const navItems: NavItem[] = [
   {
     title: "Home",
-    href: "/"
+    href: "/",
+    icon: CgHomeAlt
   },
   {
     title: "Resume",
-    href: "/resume"
+    href: "/resume",
+    icon: CgFile
   },
   {
     title: "Cover Letter",
-    href: "/cover-letter"
+    href: "/cover-letter",
+    icon: CgFileDocument
   },
   {
     title: "Application",
-    href: "/application"
-  },
-  {
-    title: "My Account",
-    href: "/my-account"
+    href: "/application",
+    icon: CgViewList
   }
 ];
