@@ -1,13 +1,14 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useMediaQuery, useIsClient } from "usehooks-ts";
 
 import TopNavbar from "./top-navbar";
 import SideNavbar from "./side-navbar";
 import { useSidebarStore } from "@/store/use-sidebar-store";
 import { MEDIUM } from "@/constants/media";
 import { cn } from "@/lib/utils";
+import { useIsClient } from "@/hooks/use-is-client";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface DashboardLayoutWrapperProps {
   children: ReactNode;
