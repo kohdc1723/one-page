@@ -8,13 +8,16 @@ import { cn } from "@/lib/utils";
 import { navItems } from "@/constants/nav-items";
 import { useSidebarStore } from "@/store/use-sidebar-store";
 import LogoWhite from "@/images/folio-logo-white.png";
+import useBasePathname from "@/hooks/use-base-pathname";
 
 export default function SideNavbar() {
+  const basePathname = useBasePathname();
+
   const { isExtended, toggleExtended } = useSidebarStore();
 
   return (
     <aside className={cn(
-      "hidden md:flex flex-col justify-between fixed top-0 text-white text-base bg-emerald-900 h-dvh py-4 px-2",
+      "hidden md:flex flex-col justify-between fixed top-0 text-white text-base bg-emerald-900 h-dvh py-4 px-2 z-10",
       isExtended ? "w-40" : "w-14"
     )}>
       <nav className="w-full flex flex-col justify-start items-start gap-8">
@@ -49,12 +52,18 @@ export default function SideNavbar() {
           "flex flex-col gap-2 w-full",
         )}>
           {navItems.map((item, i) => (
-            <li key={`${item.title}-${i}`}>
+            <li
+              key={`${item.title}-${i}`}
+              className="relative"
+            >
               <Link
                 href={item.href}
-                className="flex items-center gap-1 text-sm w-fit"
+                className="flex items-center gap-2 text-sm w-fit"
               >
-                <span className="p-2 rounded-full hover:bg-emerald-800">
+                <span className={cn(
+                  "p-2 rounded-full hover:bg-emerald-800",
+                  (item.href === basePathname) && "bg-white hover:bg-white text-emerald-900"
+                )}>
                   <item.icon className="w-6 h-6" />
                 </span>
                 {isExtended && (item.title)}

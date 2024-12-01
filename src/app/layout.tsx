@@ -22,7 +22,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.className} h-dvh`}>
+    <html lang="en" className={`${poppins.className} h-dvh bg-orange-50`}>
       <body className="antialiased">
         {children}
       </body>

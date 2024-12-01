@@ -14,7 +14,7 @@ export default function TopNavbar() {
   const toggleMenu = () => setOpen(prev => !prev);
 
   return (
-    <aside className="fixed top-0 text-white text-base bg-emerald-900 h-12 w-full flex md:hidden items-center">
+    <aside className="z-10 fixed top-0 text-white text-base bg-emerald-900 h-12 w-full flex md:hidden items-center">
       <div className="relative w-full h-full px-4 flex items-center">
         <span
           onClick={toggleMenu}
