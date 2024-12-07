@@ -6,6 +6,6 @@ interface UseSidebarStoreProps {
 }
 
 export const useSidebarStore = create<UseSidebarStoreProps>(set => ({
-  isExtended: false,
+  isExtended: true,
   toggleExtended: () => set(state => ({ isExtended: !state.isExtended }))
 }));
