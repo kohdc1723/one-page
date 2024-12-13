@@ -11,15 +11,20 @@ import { useSidebarStore } from "@/store/use-sidebar-store";
 import LogoWhite from "@/images/folio-logo-white.png";
 import useBasePathname from "@/hooks/use-base-pathname";
 import { SidebarType } from "@/types/sidebar";
+import { useIsClient } from "usehooks-ts";
 
 interface SideNavbarProps {
-  extended: SidebarType;
+  initialSidebar?: SidebarType;
 }
 
-export default function SideNavbar({ extended }: SideNavbarProps) {
-  const isExtended = extended === "open";
+export default function SideNavbar({ initialSidebar }: SideNavbarProps) {
+  const isClient = useIsClient();
   const basePathname = useBasePathname();
-  const { setSidebar } = useSidebarStore();
+  const { sidebar, setSidebar } = useSidebarStore();
+
+  const isSidebarOpen = isClient
+    ? (sidebar === "open")
+    : (initialSidebar === "open");
 
   const handleOpenSidebar = () => {
     setCookie("sidebar", "open");
@@ -34,10 +39,10 @@ export default function SideNavbar({ extended }: SideNavbarProps) {
   return (
     <aside className={cn(
       "hidden md:flex flex-col justify-between fixed top-0 text-white text-base bg-emerald-900 h-dvh py-4 px-2 z-10",
-      isExtended ? "w-40" : "w-14"
+      isSidebarOpen ? "w-40" : "w-14"
     )}>
       <nav className="w-full flex flex-col justify-start items-start gap-8">
-        {isExtended ? (
+        {isSidebarOpen ? (
           <div className="w-full flex justify-between items-center">
             <div className="flex items-center gap-1">
               <Image
@@ -82,7 +87,7 @@ export default function SideNavbar({ extended }: SideNavbarProps) {
                 )}>
                   <item.icon className="w-6 h-6" />
                 </span>
-                {isExtended && (item.title)}
+                {isSidebarOpen && (item.title)}
               </Link>
             </li>
           ))}

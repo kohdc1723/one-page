@@ -20,7 +20,9 @@ export default function DashboardLayoutWrapper({
   initialSidebar
 }: DashboardLayoutWrapperProps) {
   const isClient = useIsClient();
-  const isAboveMedium = useMediaQuery(`(min-width: ${MEDIUM})`, { initializeWithValue: false });
+  const isAboveMedium = useMediaQuery(`(min-width: ${MEDIUM})`, {
+    initializeWithValue: false
+  });
   const { sidebar, setSidebar } = useSidebarStore();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function DashboardLayoutWrapper({
 
     return (
       <>
-        <SideNavbar extended={initialSidebar} />
+        <SideNavbar initialSidebar={initialSidebar} />
         <TopNavbar />
         <main className={cn(
           "mt-12 md:mt-0 ml-0",
@@ -49,7 +51,7 @@ export default function DashboardLayoutWrapper({
   return (
     <>
       {isAboveMedium ? (
-        <SideNavbar extended={sidebar} />
+        <SideNavbar />
       ) : (
         <TopNavbar />
       )}

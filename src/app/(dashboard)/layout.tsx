@@ -10,13 +10,7 @@ interface DashboardLayoutProps {
 
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const cookieStore = await cookies();
-
-  let sidebar;
-  if (!cookieStore.has("sidebar")) {
-    sidebar = "open";
-  } else {
-    sidebar = cookieStore.get("sidebar")?.value as SidebarType;
-  }
+  const sidebar = cookieStore.get("sidebar")?.value ?? "open";
 
   return (
     <DashboardLayoutWrapper initialSidebar={sidebar as SidebarType}>
