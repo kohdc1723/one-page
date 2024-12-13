@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { setCookie } from "cookies-next/client";
 import { CgPushChevronLeftO } from "react-icons/cg";
 
 import { cn } from "@/lib/utils";
@@ -9,11 +10,26 @@ import { navItems } from "@/constants/nav-items";
 import { useSidebarStore } from "@/store/use-sidebar-store";
 import LogoWhite from "@/images/folio-logo-white.png";
 import useBasePathname from "@/hooks/use-base-pathname";
+import { SidebarType } from "@/types/sidebar";
 
-export default function SideNavbar() {
+interface SideNavbarProps {
+  extended: SidebarType;
+}
+
+export default function SideNavbar({ extended }: SideNavbarProps) {
+  const isExtended = extended === "open";
   const basePathname = useBasePathname();
+  const { setSidebar } = useSidebarStore();
 
-  const { isExtended, toggleExtended } = useSidebarStore();
+  const handleOpenSidebar = () => {
+    setCookie("sidebar", "open");
+    setSidebar("open");
+  }
+
+  const handleCloseSidebar = () => {
+    setCookie("sidebar", "close");
+    setSidebar("close");
+  }
 
   return (
     <aside className={cn(
@@ -33,13 +49,13 @@ export default function SideNavbar() {
             </div>
             <CgPushChevronLeftO
               className="w-6 h-6 cursor-pointer"
-              onClick={toggleExtended}
+              onClick={handleCloseSidebar}
             />
           </div>
         ) : (
           <div
             className="cursor-pointer"
-            onClick={toggleExtended}
+            onClick={handleOpenSidebar}
           >
             <Image
               src={LogoWhite}

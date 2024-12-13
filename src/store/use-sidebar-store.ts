@@ -1,11 +1,21 @@
 import { create } from "zustand";
 
+import { SidebarType } from "@/types/sidebar";
+
 interface UseSidebarStoreProps {
-  isExtended: boolean;
-  toggleExtended: () => void;
+  sidebar: SidebarType;
+  toggleSidebar: () => void;
+  setSidebar: (value: SidebarType) => void;
 }
 
 export const useSidebarStore = create<UseSidebarStoreProps>(set => ({
-  isExtended: true,
-  toggleExtended: () => set(state => ({ isExtended: !state.isExtended }))
+  sidebar: "open",
+  toggleSidebar: () => set(state => {
+    if (state.sidebar === "open") {
+      return { sidebar: "close" };
+    } else {
+      return { sidebar: "open" };
+    }
+  }),
+  setSidebar: (value) => set({ sidebar: value })
 }));

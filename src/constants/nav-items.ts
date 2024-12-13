@@ -15,7 +15,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Resume",
-    href: "/resume",
+    href: "/resumes",
     icon: CgFile
   },
   {

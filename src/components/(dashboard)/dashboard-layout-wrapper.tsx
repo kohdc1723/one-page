@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
 
 import TopNavbar from "./top-navbar";
@@ -8,23 +8,37 @@ import SideNavbar from "./side-navbar";
 import { useSidebarStore } from "@/store/use-sidebar-store";
 import { MEDIUM } from "@/constants/media";
 import { cn } from "@/lib/utils";
+import { SidebarType } from "@/types/sidebar";
 
 interface DashboardLayoutWrapperProps {
   children: ReactNode;
+  initialSidebar: SidebarType;
 }
 
-export default function DashboardLayoutWrapper({ children }: DashboardLayoutWrapperProps) {
+export default function DashboardLayoutWrapper({
+  children,
+  initialSidebar
+}: DashboardLayoutWrapperProps) {
   const isClient = useIsClient();
   const isAboveMedium = useMediaQuery(`(min-width: ${MEDIUM})`, { initializeWithValue: false });
-  const { isExtended } = useSidebarStore();
+  const { sidebar, setSidebar } = useSidebarStore();
+
+  useEffect(() => {
+    setSidebar(initialSidebar);
+  }, [initialSidebar, setSidebar]);
 
   // render as server component
   if (!isClient) {
+    const isInitialSidebarOpen = initialSidebar === "open";
+
     return (
       <>
-        <SideNavbar />
+        <SideNavbar extended={initialSidebar} />
         <TopNavbar />
-        <main className="mt-12 ml-0 md:mt-0 md:ml-40 p-4 md:p-8">
+        <main className={cn(
+          "mt-12 md:mt-0 ml-0",
+          isInitialSidebarOpen ? "md:ml-40" : "md:ml-14",
+        )}>
           {children}
         </main>
       </>
@@ -35,15 +49,15 @@ export default function DashboardLayoutWrapper({ children }: DashboardLayoutWrap
   return (
     <>
       {isAboveMedium ? (
-        <SideNavbar />
+        <SideNavbar extended={sidebar} />
       ) : (
         <TopNavbar />
       )}
       <main
         className={cn(
-          "p-4 md:p-8",
+          // "relative",
           isAboveMedium ? "mt-0 ml-40" : "mt-12 ml-0",
-          isExtended ? "ml-40" : "ml-14",
+          (sidebar === "open") ? "ml-40" : "ml-14",
           !isAboveMedium && "ml-0"
         )}
       >
