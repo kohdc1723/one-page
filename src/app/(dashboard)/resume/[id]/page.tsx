@@ -35,7 +35,7 @@ export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="h-14 bg-green-100">
+      <div className="h-14 border-b border-slate-300">
         header {id}
       </div>
       <ResumeEditor resume={resume} />
