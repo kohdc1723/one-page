@@ -8,11 +8,28 @@ export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
   const { id } = await params;
 
   const resume = {
-    contact: {
-      name: "John Doe",
-      email: "johndoe@test.com",
-      phone: "+12345678901",
-      location: "Vancouver, BC"
+    title: "john-doe-resume",
+    pageLayout: "singlePage",
+    header: {
+      name: "Dong-chan Koh",
+      email: "kohdc1723@gmail.com",
+      phone: "+12368691945",
+      location: "Vancouver, BC",
+      position: "Software Developer"
+    },
+    contents: {
+      workExperience: {
+
+      },
+      projects: {
+
+      },
+      skills: {
+
+      },
+      education: {
+
+      }
     }
   };
 
