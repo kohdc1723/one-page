@@ -15,8 +15,8 @@ export default function ResumeIdLayoutWrapper({ children }: ResumeIdLayoutWrappe
 
   return (
     <div className={cn(
-      "fixed top-12 md:top-0 left-0 h-dvh",
-      isSidebarOpen ? "md:left-40 w-[calc(100dvw-160px)]" : "md:left-14 w-[calc(100dvw-56px)]"
+      "fixed top-12 md:top-0 left-0 w-dvw h-dvh",
+      isSidebarOpen ? "md:left-40 md:w-[calc(100dvw-160px)]" : "md:left-14 md:w-[calc(100dvw-56px)]"
     )}>
       {children}
     </div>
