@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { setCookie } from "cookies-next/client";
 import { CgPushChevronLeftO } from "react-icons/cg";
 
 import { cn } from "@/lib/utils";
@@ -10,31 +9,15 @@ import { navItems } from "@/constants/nav-items";
 import { useSidebarStore } from "@/store/use-sidebar-store";
 import LogoWhite from "@/images/folio-logo-white.png";
 import useBasePathname from "@/hooks/use-base-pathname";
-import { SidebarType } from "@/types/sidebar";
-import { useIsClient } from "usehooks-ts";
 
-interface SideNavbarProps {
-  initialSidebar?: SidebarType;
-}
-
-export default function SideNavbar({ initialSidebar }: SideNavbarProps) {
-  const isClient = useIsClient();
+export default function SideNavbar() {
   const basePathname = useBasePathname();
+  console.log(basePathname)
   const { sidebar, setSidebar } = useSidebarStore();
+  const isSidebarOpen = sidebar === "open";
 
-  const isSidebarOpen = isClient
-    ? (sidebar === "open")
-    : (initialSidebar === "open");
-
-  const handleOpenSidebar = () => {
-    setCookie("sidebar", "open");
-    setSidebar("open");
-  }
-
-  const handleCloseSidebar = () => {
-    setCookie("sidebar", "close");
-    setSidebar("close");
-  }
+  const handleOpenSidebar = () => setSidebar("open");
+  const handleCloseSidebar = () => setSidebar("close");
 
   return (
     <aside className={cn(
