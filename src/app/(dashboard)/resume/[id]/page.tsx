@@ -1,4 +1,5 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+import ResumeEditor from "@/components/(dashboard)/resume/[id]/resume-editor";
+import ResumeViewer from "@/components/(dashboard)/resume/[id]/resume-viewer";
 
 interface ResumeIdPageProps {
   params: Promise<{ id: string }>;
@@ -9,12 +10,13 @@ export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
   console.log(id);
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col md:flex-row">
-        <ScrollArea className="md:flex-1 h-[calc(100dvh-104px)] md:h-[calc(100dvh-56px)] border-r">
-          <div className="h-[calc(100dvh-104px)]"></div>
-          <div className="h-[2000px]"></div>
-        </ScrollArea>
+    <div className="flex flex-col w-full">
+      <div className="h-14 bg-green-100">
+        header
+      </div>
+      <div className="h-[calc(100dvh-104px)] md:h-[calc(100dvh-56px)] flex flex-col md:flex-row">
+        <ResumeEditor />
+        <ResumeViewer />
       </div>
     </div>
   );

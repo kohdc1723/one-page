@@ -12,7 +12,7 @@ import useBasePathname from "@/hooks/use-base-pathname";
 
 export default function SideNavbar() {
   const basePathname = useBasePathname();
-  console.log(basePathname)
+  
   const { sidebar, setSidebar } = useSidebarStore();
   const isSidebarOpen = sidebar === "open";
 

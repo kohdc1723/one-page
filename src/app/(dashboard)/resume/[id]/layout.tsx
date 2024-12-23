@@ -1,19 +1,14 @@
-import { cookies } from "next/headers";
 import { ReactNode } from "react";
 
 import ResumeIdLayoutWrapper from "@/components/(dashboard)/resume/[id]/resume-id-layout-wrapper";
-import { SidebarType } from "@/types/sidebar";
 
-interface ResumeIdPageProps {
+interface ResumeIdLayoutProps {
   children: ReactNode;
 }
 
-export default async function ResumeIdLayout({ children }: ResumeIdPageProps) {
-  const cookieStore = await cookies();
-  const sidebar = cookieStore.get("sidebar")?.value ?? "open";
-
+export default function ResumeIdLayout({ children }: ResumeIdLayoutProps) {
   return (
-    <ResumeIdLayoutWrapper initialSidebar={sidebar as SidebarType}>
+    <ResumeIdLayoutWrapper>
       {children}
     </ResumeIdLayoutWrapper>
   );
