@@ -1,4 +1,6 @@
-import ResumeEditor from "@/components/(dashboard)/resume/[id]/resume-editor";
+import ResumeBuilder from "@/components/(dashboard)/resume/[id]/resume-builder";
+import ResumeDocument from "@/components/(dashboard)/resume/[id]/resume-document/resume-document";
+import { pdf } from "@react-pdf/renderer";
 
 interface ResumeIdPageProps {
   params: Promise<{ id: string }>;
@@ -33,12 +35,14 @@ export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
     }
   };
 
+  const resumeBlob = await pdf(<ResumeDocument resume={resume} />).toBlob();
+
   return (
     <div className="flex flex-col w-full">
-      <div className="h-14 border-b border-slate-300">
-        header {id}
-      </div>
-      <ResumeEditor resume={resume} />
+      <ResumeBuilder
+        initialResume={resume}
+        initialResumeBlob={resumeBlob}
+      />
     </div>
   );
 }
