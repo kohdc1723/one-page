@@ -5,7 +5,6 @@ import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -13,7 +12,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 interface ResumeViewerProps {
-  resumeBlob: any;
+  resumeBlob: Blob;
   width: number;
 }
 

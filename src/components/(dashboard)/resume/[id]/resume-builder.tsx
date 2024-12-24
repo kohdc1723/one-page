@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { pdf } from "@react-pdf/renderer";
+import { useResizeObserver } from "usehooks-ts";
+
 import ResumeBuilderHeader from "./resume-builder-header";
 import ResumeEditor from "./resume-editor";
 import ResumeViewer from "./resume-viewer";
-import { useResizeObserver } from "usehooks-ts";
 import ResumeDocument from "./resume-document/resume-document";
-import { pdf } from "@react-pdf/renderer";
+
 
 interface ResumeBuilderProps {
   initialResume: any;
-  initialResumeBlob: any;
+  initialResumeBlob: Blob;
 }
 
 export default function ResumeBuilder({ initialResume, initialResumeBlob }: ResumeBuilderProps) {
