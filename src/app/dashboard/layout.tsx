@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import DashboardLayoutWrapper from "@/components/(dashboard)/dashboard-layout-wrapper";
+import DashboardLayoutWrapper from "@/components/dashboard/dashboard-layout-wrapper";
 
 interface DashboardLayoutProps {
   children: ReactNode;

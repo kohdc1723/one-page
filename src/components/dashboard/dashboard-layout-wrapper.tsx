@@ -29,7 +29,7 @@ export default function DashboardLayoutWrapper({ children }: DashboardLayoutWrap
       <>
         <SideNavbar />
         <TopNavbar />
-        <main className="mt-12 md:mt-0 ml-0 md:ml-40">
+        <main className="mt-12 md:mt-0 ml-0 md:ml-14">
           {children}
         </main>
       </>

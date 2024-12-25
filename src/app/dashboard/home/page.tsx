@@ -1,8 +1,8 @@
-import CareerGoal from "@/components/(dashboard)/(home)/career-goal"
-import GettingStarted from "@/components/(dashboard)/(home)/getting-started";
-import JobApplicationsSummary from "@/components/(dashboard)/(home)/job-applications-summary";
+import CareerGoal from "@/components/dashboard/home/career-goal"
+import GettingStarted from "@/components/dashboard/home/getting-started";
+import JobApplicationsSummary from "@/components/dashboard/home/job-applications-summary";
 
-export default function Home() {
+export default function DashboardHomePage() {
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4">

@@ -9,7 +9,7 @@ interface UseSidebarStoreProps {
 }
 
 export const useSidebarStore = create<UseSidebarStoreProps>(set => ({
-  sidebar: "open",
+  sidebar: "close",
   toggleSidebar: () => set(state => {
     if (state.sidebar === "open") {
       return { sidebar: "close" };

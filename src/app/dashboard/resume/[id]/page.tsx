@@ -1,5 +1,5 @@
-import ResumeBuilder from "@/components/(dashboard)/resume/[id]/resume-builder";
-import ResumeDocument from "@/components/(dashboard)/resume/[id]/resume-document/resume-document";
+import ResumeBuilder from "@/components/dashboard/resume/[id]/resume-builder";
+import ResumeDocument from "@/components/dashboard/resume/[id]/resume-document/resume-document";
 import { pdf } from "@react-pdf/renderer";
 
 interface ResumeIdPageProps {

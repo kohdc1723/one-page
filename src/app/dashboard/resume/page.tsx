@@ -1,4 +1,4 @@
-import ResumeSection from "@/components/(dashboard)/resume/resume-section";
+import ResumeSection from "@/components/dashboard/resume/resume-section";
 import Resume from "@/types/resume";
 import resumes from "@/mock/resumes";
 

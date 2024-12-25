@@ -42,13 +42,13 @@ export default function ResumeTable({
         {filteredResumes.map(resume => (
           <TableRow key={resume.id} className="hover:bg-transparent">
             <TableCell className="font-medium text-emerald-900 hover:bg-emerald-900/5 border">
-              <Link href={`/resume/${resume.id}`}>{resume.title}</Link>
+              <Link href={`/dashboard/resume/${resume.id}`}>{resume.title}</Link>
             </TableCell>
             <TableCell className="border">{resume.createdAt}</TableCell>
             <TableCell className="border">{resume.updatedAt}</TableCell>
             <TableCell className="border">
               <div className="flex items-center gap-4 text-emerald-900">
-                <Link href={`/resume/${resume.id}`}>
+                <Link href={`/dashboard/resume/${resume.id}`}>
                   <GoPencil className="w-5 h-5" />
                 </Link>
                 <GoDuplicate className="w-5 h-5" />

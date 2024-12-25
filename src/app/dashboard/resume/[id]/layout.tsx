@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import ResumeIdLayoutWrapper from "@/components/(dashboard)/resume/[id]/resume-id-layout-wrapper";
+import ResumeIdLayoutWrapper from "@/components/dashboard/resume/[id]/resume-id-layout-wrapper";
 
 interface ResumeIdLayoutProps {
   children: ReactNode;

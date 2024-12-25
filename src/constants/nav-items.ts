@@ -10,22 +10,22 @@ interface NavItem {
 export const navItems: NavItem[] = [
   {
     title: "Home",
-    href: "/",
+    href: "/dashboard/home",
     icon: CgHomeAlt
   },
   {
     title: "Resume",
-    href: "/resume",
+    href: "/dashboard/resume",
     icon: CgFile
   },
   {
     title: "Cover Letter",
-    href: "/cover-letter",
+    href: "/dashboard/cover-letter",
     icon: CgFileDocument
   },
   {
     title: "Application",
-    href: "/application",
+    href: "/dashboard/application",
     icon: CgViewList
   }
 ];
