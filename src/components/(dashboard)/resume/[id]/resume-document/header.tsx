@@ -7,11 +7,18 @@ export default function Header({ header }) {
       fontWeight: "bold",
       textAlign: "center"
     },
+    container: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      width: "100%",
+      gap: 2
+    },
     headerContainer: {
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      width: "100%"
+      gap: 8
     },
     contactContainer: {
       display: "flex",
@@ -26,12 +33,16 @@ export default function Header({ header }) {
   });
 
   return (
-    <View style={styles.headerContainer}>
-      <Text style={styles.name}>{header.name}</Text>
-      <View style={styles.contactContainer}>
-        <Text>{header.email}</Text>
-        <Text>{header.phone}</Text>
-        <Text>{header.location}</Text>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.name}>
+          {header.name}
+        </Text>
+        <View style={styles.contactContainer}>
+          <Text>{header.email}</Text>
+          <Text>{header.phone}</Text>
+          <Text>{header.location}</Text>
+        </View>
       </View>
       <View style={styles.horizontalLine}></View>
     </View>

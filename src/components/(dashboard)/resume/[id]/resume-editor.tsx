@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { ChangeEvent, forwardRef } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -10,10 +10,9 @@ interface ResumeEditorProps {
 }
 
 const ResumeEditor = forwardRef<HTMLDivElement, ResumeEditorProps>((
-  { resume, setResume },
-  ref
+  { resume, setResume }, ref
 ) => {
-  const handleChangeName = (e) => setResume({
+  const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => setResume({
     ...resume,
     header: {
       ...resume.header,
@@ -31,5 +30,7 @@ const ResumeEditor = forwardRef<HTMLDivElement, ResumeEditorProps>((
     </ScrollArea>
   );
 });
+
+ResumeEditor.displayName = "ResumeEditor";
 
 export default ResumeEditor;

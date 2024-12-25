@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import { useResizeObserver } from "usehooks-ts";
 
@@ -15,7 +15,10 @@ interface ResumeBuilderProps {
   initialResumeBlob: Blob;
 }
 
-export default function ResumeBuilder({ initialResume, initialResumeBlob }: ResumeBuilderProps) {
+export default function ResumeBuilder({
+  initialResume,
+  initialResumeBlob
+}: ResumeBuilderProps) {
   const innerRef = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({
     ref: innerRef,
@@ -26,21 +29,28 @@ export default function ResumeBuilder({ initialResume, initialResumeBlob }: Resu
   const [resume, setResume] = useState(initialResume);
   const [resumeBlob, setResumeBlob] = useState(initialResumeBlob);
 
-  const generatePdf = async () => {
+  const generatePdf = useCallback(async () => {
     const blob = await pdf(<ResumeDocument resume={resume} />).toBlob();
     setResumeBlob(blob);
-  };
+  }, [resume]);
   
   useEffect(() => {
     generatePdf();
-  }, [resume]);
+  }, [generatePdf]);
 
   return (
     <div className="flex flex-col w-full">
       <ResumeBuilderHeader title={title} />
       <div className="h-[calc(100dvh-104px)] md:h-[calc(100dvh-56px)] flex flex-col md:flex-row">
-        <ResumeEditor ref={innerRef} resume={resume} setResume={setResume} />
-        <ResumeViewer resumeBlob={resumeBlob} width={width - 34} />
+        <ResumeEditor
+          ref={innerRef}
+          resume={resume}
+          setResume={setResume}
+        />
+        <ResumeViewer
+          resumeBlob={resumeBlob}
+          width={width - 34}
+        />
       </div>
     </div>
   );

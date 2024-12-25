@@ -12,25 +12,72 @@ export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
   const resume = {
     title: "john-doe-resume",
     pageLayout: "singlePage",
+    // common
+    common: {
+
+    },
+    // header
     header: {
       name: "Dong-chan Koh",
-      email: "kohdc1723@gmail.com",
-      phone: "+12368691945",
-      location: "Vancouver, BC",
-      position: "Software Developer"
+      position: "Software Developer",
+      contact: {
+        location: "Vancouver, BC",
+        email: "kohdc1723@gmail.com",
+        phone: "+12368691945",
+        links: {
+          likedin: "linkedin.com",
+          github: "github.com"
+        }
+      }
     },
+    // contents
     contents: {
       workExperience: {
-
+        column: 1,
+        index: 0,
+        items: [
+          {
+            company: "Apple",
+            location: "Vancouver, BC",
+            position: "Software Engineer",
+            employmentType: "Full-time",
+            workMode: "Remote",
+            startDate: "",
+            endDate: "",
+            bullets: []
+          },
+          {
+            company: "Apple",
+            location: "Vancouver, BC",
+            position: "Software Engineer",
+            employmentType: "Full-time",
+            workMode: "Remote",
+            startDate: "",
+            endDate: "",
+            bullets: []
+          }
+        ]
       },
       projects: {
-
+        column: 1,
+        index: 1,
+        items: [
+          
+        ]
       },
       skills: {
-
+        column: 1,
+        index: 2,
+        items: [
+          
+        ]
       },
       education: {
-
+        column: 1,
+        index: 3,
+        items: [
+          
+        ]
       }
     }
   };

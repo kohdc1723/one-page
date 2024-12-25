@@ -5,19 +5,20 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { LoginSchema } from "@/schemas/login-schema";
+import { RegisterSchema } from "@/schemas/register-schema";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { login } from "@/actions/login";
+import { register } from "@/actions/register";
 import FormResult from "@/components/(auth)/form-result";
 
-export default function LoginForm() {
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+export default function RegisterForm() {
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
-      password: ""
+      name: "",
+      password: "",
     }
   });
   const {
@@ -31,8 +32,8 @@ export default function LoginForm() {
     message: ""
   });
 
-  const handleSubmitLogin = async (values: z.infer<typeof LoginSchema>) => {
-    const { success, message } = await login(values);
+  const handleSubmitRegister = async (values: z.infer<typeof RegisterSchema>) => {
+    const { success, message } = await register(values);
     setFormResult({ success, message });
   };
 
@@ -40,7 +41,7 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         noValidate
-        onSubmit={handleSubmit(handleSubmitLogin)}
+        onSubmit={handleSubmit(handleSubmitRegister)}
       >
         <div className="space-y-8">
           <div className="space-y-4">
@@ -54,6 +55,25 @@ export default function LoginForm() {
                     <Input
                       placeholder="Email"
                       type="email"
+                      disabled={isSubmitting}
+                      {...field}
+                      className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-sm font-normal" />
+                </FormItem>
+              )}
+            />
+            {/* name field */}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Name"
+                      type="text"
                       disabled={isSubmitting}
                       {...field}
                       className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
@@ -90,7 +110,7 @@ export default function LoginForm() {
             disabled={isSubmitting}
             className="w-full rounded-full bg-emerald-900 hover:bg-emerald-800"
           >
-            Login
+            Sign Up
           </Button>
         </div>
       </form>
