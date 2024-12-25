@@ -21,13 +21,30 @@ const ResumeEditor = forwardRef<HTMLDivElement, ResumeEditorProps>((
   });
 
   return (
-    <ScrollArea
-      ref={ref}
-      className="flex-1 h-[calc(100dvh-48px)] md:h-dvh border-r border-slate-300"
-    >
-      <input type="text" value={resume.header.name} onChange={handleChangeName} />
-      {/* {JSON.stringify(resume, null, 4)} */}
-    </ScrollArea>
+    <div className="flex-1 h-[calc(100dvh-104px)] md:h-[calc(100dvh-56px)] border-r border-slate-300">
+      <ul className="p-4 h-14 flex items-center gap-4 border-b border-slate-300">
+        <li className="py-2 rounded flex-1 text-center text-emerald-900 font-medium hover:bg-emerald-900/5">
+          Tab1
+        </li>
+        <li className="py-2 rounded flex-1 text-center text-emerald-900 font-medium hover:bg-emerald-900/5">
+          Tab2
+        </li>
+        <li className="py-2 rounded flex-1 text-center text-emerald-900 font-medium hover:bg-emerald-900/5">
+          Tab3
+        </li>
+        <li className="py-2 rounded flex-1 text-center text-emerald-900 font-medium hover:bg-emerald-900/5">
+          Tab4
+        </li>
+      </ul>
+      <ScrollArea
+        ref={ref}
+        className="flex-1 h-[calc(100dvh-160px)] md:h-[calc(100dvh-112px)]"
+      >
+        {/* <input type="text" value={resume.header.name} onChange={handleChangeName} /> */}
+        {/* {JSON.stringify(resume, null, 4)} */}
+        <div className="h-[calc(100dvh-112px)] bg-red-100"></div>
+      </ScrollArea>
+    </div>
   );
 });
 
