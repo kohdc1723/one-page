@@ -30,12 +30,12 @@ export default function ResumeTable({
   return (
     <Table>
       <TableCaption>A list of your resumes.</TableCaption>
-      <TableHeader className="bg-orange-100/50">
+      <TableHeader className="bg-orange-900/10">
         <TableRow className="hover:bg-transparent">
-          <TableHead className="border text-black font-semibold w-1/2">Resume</TableHead>
-          <TableHead className="border text-black font-semibold w-1/6">Created</TableHead>
-          <TableHead className="border text-black font-semibold w-1/6">Updated</TableHead>
-          <TableHead className="border text-black font-semibold w-1/6">Actions</TableHead>
+          <TableHead className="border border-slate-300 text-black font-semibold w-1/2">Resume</TableHead>
+          <TableHead className="border border-slate-300 text-black font-semibold w-1/6">Created</TableHead>
+          <TableHead className="border border-slate-300 text-black font-semibold w-1/6">Updated</TableHead>
+          <TableHead className="border border-slate-300 text-black font-semibold w-1/6">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

@@ -1,4 +1,5 @@
 import NextAuth, { Session } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
 
 import authConfig from "./auth.config";
 import {
@@ -7,7 +8,6 @@ import {
   publicRoutes,
   apiAuthPrefix
 } from "@/routes";
-import { NextRequest, NextResponse } from "next/server";
 
 interface NextAuthRequest extends NextRequest {
   auth: Session | null;
