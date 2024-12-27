@@ -1,5 +1,8 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
+import Github from "next-auth/providers/github";
+import Linkedin from "next-auth/providers/linkedin"; 
 import bcrypt from "bcryptjs";
 
 import { LoginSchema } from "@/schemas/login-schema";
@@ -7,6 +10,21 @@ import { getUserByEmail } from "./utils/user";
  
 export default {
   providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true
+    }),
+    Github({
+      clientId: process.env.AUTH_GITHUB_CLIENT_ID,
+      clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true
+    }),
+    Linkedin({
+      clientId: process.env.AUTH_LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.AUTH_LINKEDIN_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true
+    }),
     Credentials({
       authorize: async (credentials) => {
         const validatedFields = LoginSchema.safeParse(credentials);

@@ -7,14 +7,13 @@ const nextConfig: NextConfig = {
     
     return config;
   },
-  // experimental: {
-  //   turbo: {
-  //     resolveAlias: {
-  //       canvas: './empty-module.ts',
-  //     },
-  //   },
-  // },
-  // swcMinify: false,
+  images: {
+    domains: [
+      "lh3.googleusercontent.com",
+      "avatars.githubusercontent.com",
+      "media.licdn.com"
+    ]
+  },
 };
 
 export default nextConfig;

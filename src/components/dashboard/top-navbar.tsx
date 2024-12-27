@@ -3,13 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { getNameInitials } from "@/utils/get-name-initials";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { IoMenuSharp } from "react-icons/io5";
+import { CgSpinner } from "react-icons/cg";
 
+import { cn } from "@/lib/utils";
 import { navItems } from "@/constants/nav-items";
 import LogoWhite from "@/images/folio-logo-white.png";
 
 export default function TopNavbar() {
   const [open, setOpen] = useState(false);
+
+  const pathname = usePathname();
+
+  const { data, status } = useSession();
+  const initial = getNameInitials(data?.user.name);
 
   const toggleMenu = () => setOpen(prev => !prev);
 
@@ -40,13 +50,43 @@ export default function TopNavbar() {
                 </li>
               ))}
             </ul>
-            <div className="flex items-center gap-1">
-              <Image
-                src={LogoWhite}
-                alt="full-logo-white"
-                className="w-10 h-10"
-              />
-              <h1 className="font-bold text-3xl">folio</h1>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <Image
+                  src={LogoWhite}
+                  alt="full-logo-white"
+                  className="w-10 h-10"
+                />
+                <h1 className="font-bold text-3xl">folio</h1>
+              </div>
+              {(status !== "unauthenticated") && (
+                <Link
+                  href="/dashboard/my-account"
+                  onClick={toggleMenu}
+                  className="flex items-center text-sm w-fit"
+                >
+                  {(status === "loading") ? (
+                    <CgSpinner className="w-10 h-10 rounded-full animate-spin" />
+                  ) : (
+                    data?.user.image ? (
+                      <Image
+                        src={data.user.image}
+                        alt="user-profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full hover:brightness-110"
+                      />
+                    ) : (
+                      <span className={cn(
+                        "rounded-full w-10 h-10 border flex items-center justify-center text-base font-normal",
+                        (pathname.startsWith("/dashboard/my-account")) ? "bg-white text-emerald-900" : "bg-emerald-900 hover:bg-emerald-800 text-white"
+                      )}>
+                        {initial}
+                      </span>
+                    )
+                  )}
+                </Link>
+              )}
             </div>
           </nav>
         )}

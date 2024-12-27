@@ -30,7 +30,7 @@ export default function ResumeViewer({ resumeBlob, width }: ResumeViewerProps) {
               </div>
             }
           >
-            <div className={`border border-slate-300`}>
+            <div className="border border-slate-300 shadow">
               <Page
                 pageNumber={1}
                 scale={1}
