@@ -4,8 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { CgPushChevronLeftO } from "react-icons/cg";
-import { CgSpinner } from "react-icons/cg";
+import { CgSpinner, CgPushChevronLeftO } from "react-icons/cg";
 
 import { cn } from "@/lib/utils";
 import { navItems } from "@/constants/nav-items";
@@ -15,7 +14,8 @@ import LogoWhite from "@/images/folio-logo-white.png";
 
 export default function SideNavbar() {
   const { data, status } = useSession();
-  const initial = getNameInitials(data?.user.name);
+  const initial = data?.user.initial;
+  const defaultInitial = getNameInitials(data?.user.name);
 
   const pathname = usePathname();
   
@@ -101,7 +101,7 @@ export default function SideNavbar() {
                     "rounded-full w-10 h-10 border flex items-center justify-center text-base font-normal",
                     (pathname.startsWith("/dashboard/my-account")) ? "bg-white text-emerald-900" : "bg-emerald-900 hover:bg-emerald-800 text-white"
                   )}>
-                    {initial}
+                    {initial || defaultInitial}
                   </span>
                 )
               )}

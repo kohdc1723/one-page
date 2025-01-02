@@ -1,19 +1,22 @@
 "use client";
 
 import * as z from "zod";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FcGoogle } from "react-icons/fc";
 import { SiLinkedin, SiGithub } from "react-icons/si";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 import { RegisterSchema } from "@/schemas/register-schema";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { register } from "@/actions/register";
+import { registerAction } from "@/actions/auth/register-action";
 import FormResult from "@/components/(auth)/form-result";
-import Link from "next/link";
+import { defaultRedirectAfterLogin } from "@/routes";
+import { SocialProvider } from "@/types/provider";
 
 export default function RegisterForm() {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -36,8 +39,24 @@ export default function RegisterForm() {
   });
 
   const handleSubmitRegister = async (values: z.infer<typeof RegisterSchema>) => {
-    const { success, message } = await register(values);
+    const { success, message } = await registerAction(values);
     setFormResult({ success, message });
+  };
+
+  const handleSocialLogin = async (provider: SocialProvider) => {
+    try {
+      await signIn(provider, { redirectTo: defaultRedirectAfterLogin });
+
+      setFormResult({
+        success: true,
+        message: "Login success"
+      });
+    } catch {
+      setFormResult({
+        success: false,
+        message: "Something went wrong"
+      });
+    }
   };
 
   return (
@@ -117,17 +136,35 @@ export default function RegisterForm() {
           </Button>
           <p className="flex justify-center font-medium">or</p>
           <div className="flex flex-col gap-2 text-sm font-medium">
-            <Button className="flex justify-center items-center border rounded-full bg-white hover:bg-slate-50 text-black">
+            <Button
+              onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                await handleSocialLogin("google");
+              }}
+              className="flex justify-center items-center border rounded-full bg-white hover:bg-slate-50 text-black"
+            >
               <div className="flex justify-center items-center gap-4 py-1">
                 <FcGoogle className="w-4 h-4" /> Continue with Google
               </div>
             </Button>
-            <Button className="flex justify-center items-center border rounded-full bg-[#0E76A8] hover:bg-[#0E76A8] text-white">
+            <Button
+              onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                await handleSocialLogin("linkedin");
+              }}
+              className="flex justify-center items-center border rounded-full bg-[#0E76A8] hover:bg-[#0E76A8] text-white"
+            >
               <div className="flex justify-center items-center gap-4 py-1">
                 <SiLinkedin className="w-5 h-5" /> Continue with LinkedIn
               </div>
             </Button>
-            <Button className="flex justify-center items-center border rounded-full bg-[#24292E] hover:bg-[#24292E] text-white">
+            <Button
+              onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                await handleSocialLogin("github");
+              }}
+              className="flex justify-center items-center border rounded-full bg-[#24292E] hover:bg-[#24292E] text-white"
+            >
               <div className="flex justify-center items-center gap-4 py-1">
                 <SiGithub className="w-4 h-4" /> Continue with Github
               </div>

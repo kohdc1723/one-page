@@ -7,6 +7,8 @@ export const authRoutes = [
   "/sign-up"
 ];
 
+export const apiPrefix = "/api";
+
 export const apiAuthPrefix = "/api/auth";
 
 export const defaultRedirectAfterLogin = "/dashboard/home";

@@ -2,19 +2,20 @@
 
 import * as z from "zod";
 import { MouseEvent, useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { SiLinkedin, SiGithub } from "react-icons/si";
+import { signIn } from "next-auth/react";
 
 import { LoginSchema } from "@/schemas/login-schema";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { login } from "@/actions/login";
+import { loginAction } from "@/actions/auth/login-action";
 import FormResult from "@/components/(auth)/form-result";
-import Link from "next/link";
+import { SocialProvider } from "@/types/provider";
 import { defaultRedirectAfterLogin } from "@/routes";
 
 export default function LoginForm() {
@@ -25,6 +26,7 @@ export default function LoginForm() {
       password: ""
     }
   });
+
   const {
     handleSubmit,
     formState: { isSubmitting }
@@ -36,22 +38,32 @@ export default function LoginForm() {
     message: ""
   });
 
-  const handleSubmitLogin = async (values: z.infer<typeof LoginSchema>) => {
-    const { success, message } = await login(values);
+  const handleLogin = async (values: z.infer<typeof LoginSchema>) => {
+    const { success, message } = await loginAction(values);
     setFormResult({ success, message });
   };
 
-  const handleSocialLogin = async (provider: "google" | "github" | "linkedin") => {
-    await signIn(provider, {
-      redirectTo: defaultRedirectAfterLogin
-    });
+  const handleSocialLogin = async (provider: SocialProvider) => {
+    try {
+      await signIn(provider, { redirectTo: defaultRedirectAfterLogin });
+
+      setFormResult({
+        success: true,
+        message: "Login success"
+      });
+    } catch {
+      setFormResult({
+        success: false,
+        message: "Something went wrong"
+      });
+    }
   };
 
   return (
     <Form {...form}>
       <form
         noValidate
-        onSubmit={handleSubmit(handleSubmitLogin)}
+        onSubmit={handleSubmit(handleLogin)}
       >
         <div className="space-y-8">
           <div className="space-y-2">
@@ -140,7 +152,7 @@ export default function LoginForm() {
             </Button>
           </div>
           <div className="font-medium text-sm flex items-center justify-center gap-2">
-            <p>You don't have an account?</p>
+            <p>You don&apos;t have an account?</p>
             <Link
               href="/sign-up"
               className="underline text-emerald-900"

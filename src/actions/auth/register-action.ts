@@ -6,8 +6,9 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { RegisterSchema } from "@/schemas/register-schema";
 import { getUserByEmail } from "@/utils/user";
+import { generateVerificationToken } from "@/utils/token";
 
-export const register = async (values: z.infer<typeof RegisterSchema>) => {
+export const registerAction = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -37,10 +38,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     }
   });
 
+  const verificationToken = await generateVerificationToken(email);
+
   // TODO: send verification token email
 
   return {
     success: true,
-    message: "Register success"
+    message: "Confirmation email sent"
   };
 };
