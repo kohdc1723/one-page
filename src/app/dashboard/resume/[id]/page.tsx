@@ -8,6 +8,7 @@ interface ResumeIdPageProps {
 
 export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
   const { id } = await params;
+  console.log(id)
 
   const resume = {
     title: "john-doe-resume",

@@ -7,7 +7,7 @@ import PasswordSection from "@/components/dashboard/my-account/password-section"
 
 export default async function MyAccountPage() {
   const session = await auth();
-  const userId = session?.user.id!;
+  const userId = session?.user.id;
 
   const response = await fetcher<User>(`/api/user/${userId}`);
 
@@ -18,7 +18,7 @@ export default async function MyAccountPage() {
       <div className="px-8 py-4 flex flex-col gap-8">
         <div className="w-full max-w-2xl">
           <AccountInfoSection user={user} />
-          <PasswordSection userId={userId} />
+          <PasswordSection userId={userId!} />
         </div>
       </div>
     );

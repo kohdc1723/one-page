@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, forwardRef } from "react";
+import { forwardRef } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -12,14 +12,6 @@ interface ResumeEditorProps {
 const ResumeEditor = forwardRef<HTMLDivElement, ResumeEditorProps>((
   { resume, setResume }, ref
 ) => {
-  const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => setResume({
-    ...resume,
-    header: {
-      ...resume.header,
-      name: e.target.value
-    }
-  });
-
   return (
     <div
       ref={ref}
@@ -42,8 +34,6 @@ const ResumeEditor = forwardRef<HTMLDivElement, ResumeEditorProps>((
       <ScrollArea
         className="flex-1 h-[calc(100dvh-160px)] md:h-[calc(100dvh-112px)]"
       >
-        {/* <input type="text" value={resume.header.name} onChange={handleChangeName} /> */}
-        {/* {JSON.stringify(resume, null, 4)} */}
         <div className="h-[calc(100dvh-112px)] bg-red-100"></div>
       </ScrollArea>
     </div>
