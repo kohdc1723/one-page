@@ -11,7 +11,7 @@ import { CgSpinner } from "react-icons/cg";
 
 import { cn } from "@/lib/utils";
 import { navItems } from "@/constants/nav-items";
-import LogoWhite from "@/images/folio-logo-white.png";
+import Logo from "@/images/one-page-logo.png";
 
 export default function TopNavbar() {
   const [open, setOpen] = useState(false);
@@ -51,13 +51,12 @@ export default function TopNavbar() {
               ))}
             </ul>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center">
                 <Image
-                  src={LogoWhite}
+                  src={Logo}
                   alt="full-logo-white"
                   className="w-10 h-10"
                 />
-                <h1 className="font-bold text-3xl">folio</h1>
               </div>
               {(status !== "unauthenticated") && (
                 <Link

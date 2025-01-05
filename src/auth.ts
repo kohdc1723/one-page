@@ -29,49 +29,48 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           emailVerified: new Date()
         }
       });
+    },
+    signIn: async ({ user, account, profile }) => {
+      const provider = account?.provider || "";
+
+      let imageToUpdate;
+
+      switch (provider) {
+        case "credentials":
+          imageToUpdate = null;
+          break;
+        case "google":
+        case "linkedin":
+          imageToUpdate = profile?.picture;
+          break;
+        case "github":
+          imageToUpdate = profile?.avatar_url;
+          break;
+        default:
+          break;
+      }
+
+      await prisma.user.update({
+        where: {
+          id: user.id
+        },
+        data: {
+          image: imageToUpdate
+        }
+      });
     }
   },
   callbacks: {
-    signIn: async ({ user, account, profile }) => {
-      const provider = account?.provider || "";
-      const socialProviders = ["google", "github", "linkedin"];
+    signIn: async ({ user, account }) => {
+      if (account?.provider !== "credentials") return true;
 
-      if (provider === "credentials") {
-        const existingUser = await getUserById(user.id!);
+      if (!user.id) return false;
+      
+      const existingUser = await getUserById(user.id);
 
-        if (!existingUser?.emailVerified) return false;
+      if (!existingUser?.emailVerified) return false;
 
-        await prisma.user.update({
-          where: {
-            id: user.id
-          },
-          data: {
-            image: null
-          }
-        });
-
-        return true;
-      } else if (socialProviders.includes(provider)) {
-        let imageToUpdate;
-        if (provider === "github") {
-          imageToUpdate = profile?.avatar_url;
-        } else {
-          imageToUpdate = profile?.picture;
-        }
-
-        await prisma.user.update({
-          where: {
-            id: user.id
-          },
-          data: {
-            image: imageToUpdate
-          }
-        });
-
-        return true;
-      } else {
-        return false;
-      }
+      return true;
     },
     session: async ({ token, session }) => {
       if (session.user) {

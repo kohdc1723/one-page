@@ -8,6 +8,7 @@ import { LoginSchema } from "@/schemas/login-schema";
 import { defaultRedirectAfterLogin } from "@/routes";
 import { getUserByEmail } from "@/utils/user";
 import { generateVerificationToken } from "@/utils/token";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const loginAction = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -32,6 +33,7 @@ export const loginAction = async (values: z.infer<typeof LoginSchema>) => {
 
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(existingUser.email);
+    await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
     return {
       success: true,

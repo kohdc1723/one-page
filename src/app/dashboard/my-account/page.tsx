@@ -1,31 +1,18 @@
 import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { fetcher } from "@/lib/fetcher";
+import { User } from "@prisma/client";
 
 import AccountInfoSection from "@/components/dashboard/my-account/account-info-section";
 import PasswordSection from "@/components/dashboard/my-account/password-section";
 
 export default async function MyAccountPage() {
   const session = await auth();
-  const userId = session?.user.id;
+  const userId = session?.user.id!;
 
-  if (!userId) {
-    return (
-      <div>no userId</div>
-    );
-  }
+  const response = await fetcher<User>(`/api/user/${userId}`);
 
-  try {
-    const response = await fetch(`http://localhost:3000/api/user/${userId}`, {
-      headers: await headers()
-    })
-
-    if (!response.ok) {
-      return (
-        <div>{response.statusText}</div>
-      );
-    }
-
-    const user = await response.json();
+  if (response.success) {
+    const user = response.data as User;
 
     return (
       <div className="px-8 py-4 flex flex-col gap-8">
@@ -35,9 +22,7 @@ export default async function MyAccountPage() {
         </div>
       </div>
     );
-  } catch (err) {
-    return (
-      <div>err</div>
-    );
   }
+
+  throw new Error(response.error);
 }

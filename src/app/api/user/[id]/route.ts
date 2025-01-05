@@ -9,10 +9,7 @@ export async function GET(
   const { id } = await params;
 
   if (!id) {
-    return NextResponse.json({
-      success: false,
-      error: "Invalid request"
-    }, {
+    return NextResponse.json("Invalid parameter", {
       status: 400
     });
   }
@@ -20,12 +17,17 @@ export async function GET(
   try {
     const user = await prisma.user.findUnique({ where: { id } });
 
+    if (!user) {
+      return NextResponse.json(`No user found with id ${id}`, {
+        status: 404
+      });
+    }
+
     return NextResponse.json(user);
-  } catch {
-    return NextResponse.json({
-      success: false,
-      error: `Failed to get user with id ${id}`
-    }, {
+  } catch (err) {
+    console.error("GET /api/user/[id] failed:", err);
+
+    return NextResponse.json(`Failed to get user with id ${id}`, {
       status: 500
     });
   }

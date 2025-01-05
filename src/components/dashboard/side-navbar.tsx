@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { navItems } from "@/constants/nav-items";
 import { useSidebarStore } from "@/store/use-sidebar-store";
 import { getNameInitials } from "@/utils/get-name-initials";
-import LogoWhite from "@/images/folio-logo-white.png";
+import Logo from "@/images/one-page-logo.png";
 
 export default function SideNavbar() {
   const { data, status } = useSession();
@@ -33,13 +33,16 @@ export default function SideNavbar() {
       <nav className="h-full w-full flex flex-col justify-start items-start gap-8">
         {isSidebarOpen ? (
           <div className="w-full flex justify-between items-center">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <Image
-                src={LogoWhite}
+                src={Logo}
                 alt="full-logo-white"
                 className="w-10 h-10"
               />
-              <h1 className="font-bold text-3xl">folio</h1>
+              {/* <h1 className="flex flex-col font-bold text-sm leading-tight">
+                <span>one</span>
+                <span>page</span>
+              </h1> */}
             </div>
             <CgPushChevronLeftO
               className="w-6 h-6 cursor-pointer"
@@ -52,7 +55,7 @@ export default function SideNavbar() {
             onClick={handleOpenSidebar}
           >
             <Image
-              src={LogoWhite}
+              src={Logo}
               alt="logo-white"
               className="w-10 h-10"
             />
