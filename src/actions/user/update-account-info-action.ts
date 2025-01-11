@@ -4,48 +4,38 @@ import * as z from "zod";
 
 import { prisma } from "@/lib/prisma";
 import { AccountInfoSchema } from "@/schemas/account-info-schema";
+import { SafeServerAction } from "@/types/actions";
 import { User } from "@prisma/client";
-import { ServerActionResponse } from "../types";
 
-interface UpdateAccountInfoActionProps {
-  id: string;
-  values: z.infer<typeof AccountInfoSchema>
-}
-
-export default async function updateAccountInfoAction({
-  id,
-  values
-}: UpdateAccountInfoActionProps): Promise<ServerActionResponse<User>> {
-  if (!id) {
-    return {
-      success: false,
-      error: "Invalid parameters"
-    }
-  }
-
+export const updateAccountInfoAction: SafeServerAction<z.infer<typeof AccountInfoSchema>, User> = async (values) => {
   const parsedValues = AccountInfoSchema.safeParse(values);
+
   if (!parsedValues.success) {
     return {
-      success: false,
-      error: "Invalid values"
+      isSuccess: false,
+      error: "Invalid input"
     };
   }
 
   try {
+    const { id } = values;
+
     const user = await prisma.user.update({
       where: { id },
       data: {
         ...parsedValues.data
       }
-    })
+    });
 
     return {
-      success: true,
+      isSuccess: true,
       data: user
     };
-  } catch {
+  } catch (err) {
+    console.error("Failed to update an user:", err);
+
     return {
-      success: false,
+      isSuccess: false,
       error: "Failed to update an user"
     };
   }

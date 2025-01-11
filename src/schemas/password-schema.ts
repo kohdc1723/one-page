@@ -1,8 +1,10 @@
 import * as z from "zod";
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,40}$/;
+export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,40}$/;
 
 const BasePasswordSchema = z.object({
+  id: z.string()
+    .min(1, "id is required"),
   password: z.string()
     .min(8, "Password must be at least 8 characters long")
     .max(40, "Password must be at most 40 characters long")

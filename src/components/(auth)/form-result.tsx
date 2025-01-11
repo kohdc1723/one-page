@@ -1,14 +1,9 @@
 import { FaRegCircleCheck, FaRegCircleXmark } from "react-icons/fa6";
 
-
 import { cn } from "@/lib/utils";
+import { FormResult as FormResultType } from "@/types/form-result";
 
-interface FormResultProps {
-  success?: boolean;
-  message?: string;
-}
-
-export default function FormResult({ success, message }: FormResultProps) {
+export default function FormResult({ success, message }: FormResultType) {
   if (!message) {
     return null;
   }

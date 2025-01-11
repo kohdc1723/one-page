@@ -5,45 +5,57 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
 import { RegisterSchema } from "@/schemas/register-schema";
-import { getUserByEmail } from "@/utils/user";
+import { getUserByEmailOrNull } from "@/utils/user";
 import { generateVerificationToken } from "@/utils/token";
 import { sendVerificationEmail } from "@/lib/mail";
+import { SafeServerAction } from "@/types/actions";
+import { User } from "@prisma/client";
 
-export const registerAction = async (values: z.infer<typeof RegisterSchema>) => {
+export const registerAction: SafeServerAction<z.infer<typeof RegisterSchema>, User> = async (values) => {
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {
-      success: false,
-      message: "Invalid fields"
+      isSuccess: false,
+      error: "Invalid fields"
     };
   }
 
   const { email, name, password } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await getUserByEmail(email);
+  try {
+    const existingUser = await getUserByEmailOrNull(email);
 
-  if (existingUser) {
+    if (existingUser) {
+      return {
+        isSuccess: false,
+        error: "Email already in use"
+      };
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name,
+        password: hashedPassword
+      }
+    });
+
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
     return {
-      success: false,
-      message: "Email already in use"
-    }
+      isSuccess: true,
+      data: user,
+      message: "Confirmation email sent"
+    };
+  } catch (err) {
+    console.error("Failed to register:", err);
+
+    return {
+      isSuccess: false,
+      error: "Something went wrong"
+    };
   }
-
-  await prisma.user.create({
-    data: {
-      email,
-      name,
-      password: hashedPassword
-    }
-  });
-
-  const verificationToken = await generateVerificationToken(email);
-  await sendVerificationEmail(verificationToken.email, verificationToken.token);
-
-  return {
-    success: true,
-    message: "Confirmation email sent"
-  };
 };

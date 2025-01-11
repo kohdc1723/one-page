@@ -1,16 +1,20 @@
 "use client";
 
 import * as z from "zod";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
 import { User } from "@prisma/client";
 import { AccountInfoSchema } from "@/schemas/account-info-schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/actions/auth/logout-action";
-import updateAccountInfoAction from "@/actions/user/update-account-info-action";
-import { useSession } from "next-auth/react";
+import { updateAccountInfoAction } from "@/actions/user/update-account-info-action";
+import useServerAction from "@/hooks/use-server-action";
+import { useRouter } from "next/navigation";
 
 interface AccountInfoSectionProps {
   user: User;
@@ -18,11 +22,13 @@ interface AccountInfoSectionProps {
 
 export default function AccountInfoSection({ user }: AccountInfoSectionProps) {
   const { id, name, initial } = user;
-  const { update } = useSession();
+  const { update: updateSession } = useSession();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof AccountInfoSchema>>({
     resolver: zodResolver(AccountInfoSchema),
     defaultValues: {
+      id: id,
       name: name || "",
       initial: initial || ""
     }
@@ -33,9 +39,31 @@ export default function AccountInfoSection({ user }: AccountInfoSectionProps) {
     formState: { isSubmitting }
   } = form;
 
+  const { executeAction: executeUpdateAccountInfo } = useServerAction(updateAccountInfoAction, {
+    onSuccess: () => {
+      updateSession();
+      toast.success("Account information has been updated.");
+    },
+    onError: () => {
+      toast.error("Failed to update an account information.");
+    }
+  });
+
+  const { executeAction: executeLogout } = useServerAction(logoutAction, {
+    onSuccess: () => {
+      router.push("/sign-in");
+    },
+    onError: () => {
+      toast.error("Failed to log out.");
+    }
+  });
+
   const handleSaveUser = async (values: z.infer<typeof AccountInfoSchema>) => {
-    await updateAccountInfoAction({ id, values });
-    update();
+    await executeUpdateAccountInfo(values);
+  };
+
+  const handleLogout = async () => {
+    await executeLogout();
   };
 
   return (
@@ -96,7 +124,7 @@ export default function AccountInfoSection({ user }: AccountInfoSectionProps) {
           <div className="flex justify-end gap-4 pt-4">
             <Button
               type="button"
-              onClick={logoutAction}
+              onClick={handleLogout}
               disabled={isSubmitting}
               className="bg-orange-100/10 hover:bg-red-600/10 text-red-600 border border-red-600 rounded w-24"
             >

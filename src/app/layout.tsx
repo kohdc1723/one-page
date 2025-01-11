@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { Poppins } from "next/font/google";
 
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -25,6 +26,15 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.className} h-dvh bg-orange-100/10`}>
       <body className="antialiased">
         {children}
+        <Toaster
+          closeButton={true}
+          toastOptions={{
+            classNames: {
+              success: "bg-white text-emerald-900 border-slate-100",
+              error: "bg-white text-red-700 border-slate-100"
+            }
+          }}
+        />
       </body>
     </html>
   );

@@ -4,28 +4,20 @@ import * as z from "zod";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
+import { PasswordSchema } from "@/schemas/password-schema";
+import { SafeServerAction } from "@/types/actions";
 import { User } from "@prisma/client";
-import { PasswordSchema, UpdatePasswordSchema } from "@/schemas/password-schema";
 
-interface UpdatePasswordActionProps {
-  id: string;
-  values: z.infer<typeof PasswordSchema>
-}
-
-export default async function updatePasswordAction({ id, values }: UpdatePasswordActionProps): Promise<User | null> {
-  if (!id) return null;
-
+export const updatePasswordAction: SafeServerAction<z.infer<typeof PasswordSchema>, User> = async (values) => {
   const parsedValues = PasswordSchema.safeParse(values);
   if (!parsedValues.success) {
-    return null;
+    return {
+      isSuccess: false,
+      error: "Invalid input"
+    };
   }
 
-  const parsedValuesForUpdate = UpdatePasswordSchema.safeParse(values);
-  if (!parsedValuesForUpdate.success) {
-    return null;
-  }
-
-  const { password } = parsedValuesForUpdate.data;
+  const { id, password } = parsedValues.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -34,10 +26,18 @@ export default async function updatePasswordAction({ id, values }: UpdatePasswor
       data: {
         password: hashedPassword
       }
-    })
+    });
 
-    return user;
-  } catch {
-    return null;
+    return {
+      isSuccess: true,
+      data: user
+    };
+  } catch (err) {
+    console.error("Failed to update password:", err);
+
+    return {
+      isSuccess: false,
+      error: "Failed to update password"
+    };
   }
 }

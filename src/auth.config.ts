@@ -6,7 +6,7 @@ import Linkedin from "next-auth/providers/linkedin";
 import bcrypt from "bcryptjs";
 
 import { LoginSchema } from "@/schemas/login-schema";
-import { getUserByEmail } from "./utils/user";
+import { getUserByEmailOrNull } from "./utils/user";
  
 export default {
   providers: [
@@ -32,7 +32,7 @@ export default {
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
-          const user = await getUserByEmail(email);
+          const user = await getUserByEmailOrNull(email);
           if (!user || !user.password) {
             return null;
           }

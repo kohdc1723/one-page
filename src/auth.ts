@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { prisma } from "@/lib/prisma";
 import authConfig from "@/auth.config";
-import { getUserById } from "@/utils/user";
+import { getUserByIdOrNull } from "@/utils/user";
 import { UserRole } from "@prisma/client";
 
 type ExtendedUser = DefaultSession["user"] & {
@@ -66,7 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       if (!user.id) return false;
       
-      const existingUser = await getUserById(user.id);
+      const existingUser = await getUserByIdOrNull(user.id);
 
       if (!existingUser?.emailVerified) return false;
 
@@ -86,7 +86,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     jwt: async ({ token }) => {
       if (!token.sub) return token;
 
-      const existingUser = await getUserById(token.sub);
+      const existingUser = await getUserByIdOrNull(token.sub);
 
       if (!existingUser) return token;
 

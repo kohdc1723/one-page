@@ -3,6 +3,7 @@
 import * as z from "zod";
 import { MouseEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FcGoogle } from "react-icons/fc";
@@ -16,9 +17,13 @@ import { Button } from "@/components/ui/button";
 import { loginAction } from "@/actions/auth/login-action";
 import FormResult from "@/components/(auth)/form-result";
 import { SocialProvider } from "@/types/provider";
+import useServerAction from "@/hooks/use-server-action";
+import { FormResult as FormResultType } from "@/types/form-result";
 import { defaultRedirectAfterLogin } from "@/routes";
 
 export default function LoginForm() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -32,20 +37,34 @@ export default function LoginForm() {
     formState: { isSubmitting }
   } = form;
 
-
-  const [formResult, setFormResult] = useState({
+  const [formResult, setFormResult] = useState<FormResultType>({
     success: true,
-    message: ""
+    message: undefined
+  });
+
+  const { executeAction: executeLogin } = useServerAction(loginAction, {
+    onSuccess: ({ message }) => {
+      setFormResult({
+        success: true,
+        message: message
+      });
+      router.push(defaultRedirectAfterLogin);
+    },
+    onError: ({ error }) => {
+      setFormResult({
+        success: false,
+        message: error
+      })
+    }
   });
 
   const handleLogin = async (values: z.infer<typeof LoginSchema>) => {
-    const { success, message } = await loginAction(values);
-    setFormResult({ success, message });
+    await executeLogin(values);
   };
 
   const handleSocialLogin = async (provider: SocialProvider) => {
     try {
-      await signIn(provider, { redirectTo: defaultRedirectAfterLogin });
+      await signIn(provider);
 
       setFormResult({
         success: true,
@@ -115,6 +134,14 @@ export default function LoginForm() {
           >
             Login
           </Button>
+          <div className="font-medium text-sm flex items-center justify-center gap-2">
+            <Link
+              href="/reset-password"
+              className="underline text-emerald-900"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <p className="flex justify-center font-medium">or</p>
           <div className="flex flex-col gap-2 text-sm font-medium">
             <Button

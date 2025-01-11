@@ -15,8 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { registerAction } from "@/actions/auth/register-action";
 import FormResult from "@/components/(auth)/form-result";
-import { defaultRedirectAfterLogin } from "@/routes";
 import { SocialProvider } from "@/types/provider";
+import useServerAction from "@/hooks/use-server-action";
+import { FormResult as FormResultType } from "@/types/form-result";
 
 export default function RegisterForm() {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -32,20 +33,33 @@ export default function RegisterForm() {
     formState: { isSubmitting }
   } = form;
 
-
-  const [formResult, setFormResult] = useState({
+  const [formResult, setFormResult] = useState<FormResultType>({
     success: true,
-    message: ""
+    message: undefined
+  });
+
+  const { executeAction: executeRegister } = useServerAction(registerAction, {
+    onSuccess: ({ message }) => {
+      setFormResult({
+        success: true,
+        message: message
+      });
+    },
+    onError: ({ error }) => {
+      setFormResult({
+        success: false,
+        message: error
+      })
+    }
   });
 
   const handleSubmitRegister = async (values: z.infer<typeof RegisterSchema>) => {
-    const { success, message } = await registerAction(values);
-    setFormResult({ success, message });
+    await executeRegister(values);
   };
 
   const handleSocialLogin = async (provider: SocialProvider) => {
     try {
-      await signIn(provider, { redirectTo: defaultRedirectAfterLogin });
+      await signIn(provider);
 
       setFormResult({
         success: true,

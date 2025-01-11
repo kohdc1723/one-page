@@ -1,35 +1,44 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getUserByEmail } from "@/utils/user";
-import { getVerificationTokenByToken } from "@/utils/verification-token";
+import { SafeServerAction } from "@/types/actions";
+import { getUserByEmailOrNull } from "@/utils/user";
+import { getVerificationTokenByTokenOrNull } from "@/utils/verification-token";
+import { VerificationToken } from "@prisma/client";
 
-export const emailVerificationAction = async (token: string) => {
-  const existingToken = await getVerificationTokenByToken(token);
+export const emailVerificationAction: SafeServerAction<string | null, VerificationToken> = async (token) => {
+  if (!token) {
+    return {
+      isSuccess: false,
+      error: "Missing token"
+    };
+  }
+
+  const existingToken = await getVerificationTokenByTokenOrNull(token);
 
   if (!existingToken) {
     return {
-      success: false,
+      isSuccess: false,
       error: "Token not found"
-    }
+    };
   }
 
   const hasExpired = new Date(existingToken.expires_at) < new Date();
 
   if (hasExpired) {
     return {
-      success: false,
+      isSuccess: false,
       error: "Token has expired"
-    }
+    };
   }
 
-  const existingUser = await getUserByEmail(existingToken.email);
+  const existingUser = await getUserByEmailOrNull(existingToken.email);
 
   if (!existingUser) {
     return {
-      success: false,
+      isSuccess: false,
       error: "User not found"
-    }
+    };
   }
 
   try {
@@ -43,21 +52,21 @@ export const emailVerificationAction = async (token: string) => {
       }
     });
 
-    await prisma.verificationToken.delete({
+    const verificationToken = await prisma.verificationToken.delete({
       where: { id: existingToken.id }
     });
 
     return {
-      success: true,
+      isSuccess: true,
+      data: verificationToken,
       message: "Email verified"
     };
   } catch (err) {
-    const error = err as Error;
-    console.error("Failed to verify email:", error.message);
+    console.error("Failed to verify email:", err);
 
     return {
-      success: false,
+      isSuccess: false,
       error: "Something went wrong"
-    }
+    };
   }
 }

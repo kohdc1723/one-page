@@ -4,10 +4,13 @@ import * as z from "zod";
 import { PasswordSchema } from "@/schemas/password-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import updatePasswordAction from "@/actions/user/update-password-action";
+import { updatePasswordAction } from "@/actions/user/update-password-action";
+import useServerAction from "@/hooks/use-server-action";
 
 interface PasswordSectionProps {
   userId: string;
@@ -17,6 +20,7 @@ export default function PasswordSection({ userId }: PasswordSectionProps) {
   const form = useForm<z.infer<typeof PasswordSchema>>({
     resolver: zodResolver(PasswordSchema),
     defaultValues: {
+      id: userId,
       password: "",
       confirmPassword: ""
     }
@@ -27,11 +31,17 @@ export default function PasswordSection({ userId }: PasswordSectionProps) {
     formState: { isSubmitting }
   } = form;
 
+  const { executeAction } = useServerAction(updatePasswordAction, {
+    onSuccess: () => {
+      toast.success("Password has been updated.");
+    },
+    onError: () => {
+      toast.error("Failed to update password.");
+    }
+  });
+
   const handleSavePassword = async (values: z.infer<typeof PasswordSchema>) => {
-    await updatePasswordAction({
-      id: userId,
-      values
-    });
+    await executeAction(values);
   };
 
   return (
