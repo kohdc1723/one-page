@@ -11,6 +11,7 @@ import { SafeServerAction } from "@/types/actions";
 
 export const newPasswordAction: SafeServerAction<z.infer<typeof NewPasswordSchema>, undefined> = async (values) => {
   const { token } = values;
+  console.log(token)
 
   if (!token) {
     return {

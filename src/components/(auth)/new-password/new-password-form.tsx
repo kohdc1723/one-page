@@ -24,7 +24,7 @@ export default function NewPasswordForm() {
     resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
       password: "",
-      token: token
+      token: null
     }
   });
 
@@ -53,8 +53,8 @@ export default function NewPasswordForm() {
     }
   });
 
-  const handleNewPassword = async (values: z.infer<typeof NewPasswordSchema>) => {
-    await executeNewPassword(values);
+  const handleNewPassword = async (values: z.infer<typeof NewPasswordSchema>) => {    
+    await executeNewPassword({ ...values, token });
   };
 
   return (
