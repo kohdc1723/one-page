@@ -7,60 +7,277 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// auth models
 enum UserRole {
   ADMIN
   USER
 }
 
 model User {
-  id                 String    @id @default(cuid())
-  name               String?
-  email              String?   @unique
-  emailVerified      DateTime? @map("email_verified")
-  image              String?
-  password           String?
-  initial            String?
-  role               UserRole  @default(USER)
-  accounts           Account[]
-  isTwoFactorEnabled Boolean   @default(false)
- 
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String?                @unique
+  emailVerified         DateTime?              @map("email_verified")
+  image                 String?
+  password              String?
+  initial               String?
+  role                  UserRole               @default(USER)
+  accounts              Account[]
+  isTwoFactorEnabled    Boolean                @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
+
+  resumes               Resume[]
+  
+  educationItems        EducationItem[]
+  workExperienceItems   WorkExperienceItem[]
+  skillItems            SkillItem[]
+  projectItems          ProjectItem[]
+
   @@map("users")
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
  
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
 
 model VerificationToken {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   email      String
-  token      String @unique
+  token      String   @unique
   expires_at DateTime
 
   @@unique([email, token])
 }
 
 model ResetPasswordToken {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   email      String
-  token      String @unique
+  token      String   @unique
   expires_at DateTime
 
   @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id         String   @id @default(cuid())
+  email      String
+  token      String   @unique
+  expires_at DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+// resume models
+model Resume {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  title      String
+  created_at DateTime
+  updated_at DateTime
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  header     Header?
+  sections   Section[]
+
+  @@map("resumes")
+}
+
+model Header {
+  id         String @id @default(cuid())
+  firstName  String @map("first_name")
+  lastName   String @map("last_name")
+
+  resumeId   String @unique @map("resume_id")
+  resume     Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("headers")
+}
+
+enum SectionType {
+  EDUCATION
+  WORK_EXPERIENCE
+  SKILLS
+  PROJECTS
+}
+
+model Section {
+  id         String      @id @default(cuid())
+  type       SectionType
+  column     Int         @default(1)
+  row        Int
+  isVisible  Boolean     @default(true) @map("is_visible")
+  
+  resumeId   String      @map("resume_id")
+  resume     Resume      @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  educationItems         SectionEducationItem[]
+  workExperienceItems    SectionWorkExperienceItem[]
+  skillItems             SectionSkillItem[]
+  projectItems           SectionProjectItem[]
+
+  @@unique([resumeId, type])
+  @@map("sections")
+}
+
+model EducationItem {
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+
+  school      String
+  location    String?
+  degree      String
+  field       String
+  gpa         Float?    @db.Real
+  startDate   DateTime  @map("start_date")
+  endDate     DateTime? @map("end_date")
+  isCurrent   Boolean   @default(false) @map("is_current")
+  bullets     String[]  @db.Text
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections    SectionEducationItem[]
+
+  @@map("education_items")
+}
+
+enum WorkMode {
+  ON_SITE
+  REMOTE
+  HYBRID
+}
+
+enum EmploymentType {
+  PERMANENT_FULL_TIME
+  PERMANENT_PART_TIME
+  CONTRACT_FULL_TIME
+  CONTRACT_PART_TIME
+  FREELANCE
+  INTERNSHIP
+  CO_OP
+  SEASONAL
+  APPRENTICESHIP
+  SELF_EMPLOYED
+  CASUAL
+  ON_CALL
+}
+
+model WorkExperienceItem {
+  id             String         @id @default(cuid())
+  userId         String         @map("user_id")
+
+  company        String
+  position       String
+  location       String?
+  workMode       WorkMode       @map("work_mode")
+  employmentType EmploymentType @map("employment_type")
+  startDate      DateTime       @map("start_date")
+  endDate        DateTime?      @map("end_date")
+  isCurrent      Boolean        @default(false) @map("is_current")
+  bullets        String[]       @db.Text
+  
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections       SectionWorkExperienceItem[]
+
+  @@map("work_experience_items")
+}
+
+model SkillItem {
+  id        String  @id @default(cuid())
+  userId    String  @map("user_id")
+
+  category  String?
+  skills    String[]
+  
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections  SectionSkillItem[]
+
+  @@map("skill_items")
+}
+
+model ProjectItem {
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  
+  title       String
+  startDate   DateTime  @map("start_date")
+  endDate     DateTime? @map("end_date")
+  isCurrent   Boolean   @default(false) @map("is_current")
+  bullets     String[]  @db.Text
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections    SectionProjectItem[]
+
+  @@map("project_items")
+}
+
+// Junction tables for M:N mapping between Section and Item
+model SectionEducationItem {
+  sectionId String        @map("section_id")
+  itemId    String        @map("item_id")
+  order     Int           @default(0)
+  
+  section   Section       @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  item      EducationItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([sectionId, itemId])
+  @@map("section_education_items")
+}
+
+model SectionWorkExperienceItem {
+  sectionId String             @map("section_id")
+  itemId    String             @map("item_id")
+  order     Int                @default(0)
+  
+  section   Section            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  item      WorkExperienceItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([sectionId, itemId])
+  @@map("section_work_experience_items")
+}
+
+model SectionSkillItem {
+  sectionId String    @map("section_id")
+  itemId    String    @map("item_id")
+  order     Int       @default(0)
+  
+  section   Section   @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  item      SkillItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([sectionId, itemId])
+  @@map("section_skill_items")
+}
+
+model SectionProjectItem {
+  sectionId String      @map("section_id")
+  itemId    String      @map("item_id")
+  order     Int         @default(0)
+  
+  section   Section     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  item      ProjectItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([sectionId, itemId])
+  @@map("section_project_items")
 }

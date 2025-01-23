@@ -28,7 +28,8 @@ export default function LoginForm() {
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
+      twoFactorCode: ""
     }
   });
 
@@ -37,18 +38,23 @@ export default function LoginForm() {
     formState: { isSubmitting }
   } = form;
 
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
+
   const [formResult, setFormResult] = useState<FormResultType>({
     success: true,
     message: undefined
   });
 
   const { executeAction: executeLogin } = useServerAction(loginAction, {
-    onSuccess: ({ message }) => {
+    onSuccess: ({ data, message }) => {
       setFormResult({
         success: true,
         message: message
       });
-      router.push(defaultRedirectAfterLogin);
+
+      if (data === "2FA") setShowTwoFactor(true);
+
+      if (data === "LOGIN_SUCCESS") router.push(defaultRedirectAfterLogin);
     },
     onError: ({ error }) => {
       setFormResult({
@@ -86,44 +92,68 @@ export default function LoginForm() {
       >
         <div className="space-y-8">
           <div className="space-y-2">
-            {/* email field */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Email"
-                      type="email"
-                      disabled={isSubmitting}
-                      {...field}
-                      className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-sm font-normal" />
-                </FormItem>
-              )}
-            />
-            {/* password field */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Password"
-                      type="password"
-                      disabled={isSubmitting}
-                      {...field}
-                      className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-sm font-normal" />
-                </FormItem>
-              )}
-            />
+            {!showTwoFactor ? (
+              <>
+                <FormField
+                  key="email"
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Email"
+                          type="email"
+                          disabled={isSubmitting}
+                          {...field}
+                          className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-sm font-normal" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  key="password"
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Password"
+                          type="password"
+                          disabled={isSubmitting}
+                          {...field}
+                          className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-sm font-normal" />
+                    </FormItem>
+                  )}
+                />
+              </>
+            ) : (
+              <FormField
+                key="twoFactorCode"
+                control={form.control}
+                name="twoFactorCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="2FA Code"
+                        type="text"
+                        disabled={isSubmitting}
+                        {...field}
+                        className="rounded-none focus:border-orange-300 focus-visible:ring-transparent"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-sm font-normal" />
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
           <FormResult {...formResult} />
           {/* login button */}
@@ -132,7 +162,7 @@ export default function LoginForm() {
             disabled={isSubmitting}
             className="w-full rounded-full bg-emerald-900 hover:bg-emerald-800"
           >
-            Login
+            {showTwoFactor ? "Confirm" : "Login"}
           </Button>
           <div className="font-medium text-sm flex items-center justify-center gap-2">
             <Link

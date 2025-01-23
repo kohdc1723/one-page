@@ -24,6 +24,15 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
   });
 }
 
+export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
+  await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: email,
+    subject: "2FA code",
+    html: twoFactorTokenHtml(token)
+  });
+}
+
 const emailVerificationHtml = (link: string) => `
   <p>
     Click <a href="${link}">here</a> to confirm your email.
@@ -33,5 +42,11 @@ const emailVerificationHtml = (link: string) => `
 const resetPasswordHtml = (link: string) => `
   <p>
     Click <a href="${link}">here</a> to reset your password.
+  </p>
+`;
+
+const twoFactorTokenHtml = (token: string) => `
+  <p>
+    Your 2FA code: ${token}
   </p>
 `;

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import authConfig from "@/auth.config";
 import { getUserByIdOrNull } from "@/utils/user";
 import { UserRole } from "@prisma/client";
+import { getTwoFactorConfirmationByUserIdOrNull } from "./utils/two-factor-confirmation";
 
 type ExtendedUser = DefaultSession["user"] & {
   role: "ADMIN" | "USER",
@@ -69,6 +70,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const existingUser = await getUserByIdOrNull(user.id);
 
       if (!existingUser?.emailVerified) return false;
+
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserIdOrNull(existingUser.id);
+        
+        if (!twoFactorConfirmation) return false;
+
+        await prisma.twoFactorConfirmation.delete({
+          where: {
+            id: twoFactorConfirmation.id
+          }
+        });
+      }
 
       return true;
     },
