@@ -9,7 +9,6 @@ import ResumeEditor from "./resume-editor";
 import ResumeViewer from "./resume-viewer";
 import ResumeDocument from "../../../resume-document/resume-document";
 import { ResumeWithRelations } from "@/types/resume";
-import { useResumeStore } from "@/store/use-resume-store";
 
 interface ResumeBuilderProps {
   initialResume: ResumeWithRelations;
@@ -20,12 +19,6 @@ export default function ResumeBuilder({
   initialResume,
   initialResumeBlob
 }: ResumeBuilderProps) {
-  const innerRef = useRef<HTMLDivElement>(null);
-  const { width = 0 } = useResizeObserver({
-    ref: innerRef,
-    box: "border-box"
-  });
-
   const [resume, setResume] = useState(initialResume);
   const [resumeBlob, setResumeBlob] = useState(initialResumeBlob);
 
@@ -45,13 +38,11 @@ export default function ResumeBuilder({
       <ResumeBuilderHeader resume={resume} />
       <div className="h-[calc(100dvh-104px)] md:h-[calc(100dvh-56px)] flex flex-col md:flex-row">
         <ResumeEditor
-          ref={innerRef}
           resume={resume}
           setResume={setResume}
         />
         <ResumeViewer
           resumeBlob={resumeBlob}
-          width={width - 34}
         />
       </div>
     </div>
