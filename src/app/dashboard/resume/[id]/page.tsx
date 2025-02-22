@@ -1,6 +1,10 @@
-import ResumeBuilder from "@/components/dashboard/resume/[id]/resume-builder";
-import ResumeDocument from "@/components/dashboard/resume/[id]/resume-document/resume-document";
 import { pdf } from "@react-pdf/renderer";
+import { notFound } from "next/navigation";
+
+import { fetcher } from "@/lib/fetcher";
+import { ResumeWithRelations } from "@/types/resume";
+import ResumeBuilder from "@/components/dashboard/resume/[id]/resume-builder";
+import ResumeDocument from "@/components/resume-document/resume-document";
 
 interface ResumeIdPageProps {
   params: Promise<{ id: string }>;
@@ -8,81 +12,21 @@ interface ResumeIdPageProps {
 
 export default async function ResumeIdPage({ params }: ResumeIdPageProps) {
   const { id } = await params;
-  console.log(id)
-
-  const resume = {
-    title: "john-doe-resume",
-    pageLayout: "singlePage",
-    // common
-    common: {
-
-    },
-    // header
-    header: {
-      name: "Dong-chan Koh",
-      position: "Software Developer",
-      contact: {
-        location: "Vancouver, BC",
-        email: "kohdc1723@gmail.com",
-        phone: "+12368691945",
-        links: {
-          likedin: "linkedin.com",
-          github: "github.com"
-        }
-      }
-    },
-    // contents
-    contents: {
-      workExperience: {
-        column: 1,
-        index: 0,
-        items: [
-          {
-            company: "Apple",
-            location: "Vancouver, BC",
-            position: "Software Engineer",
-            employmentType: "Full-time",
-            workMode: "Remote",
-            startDate: "",
-            endDate: "",
-            bullets: []
-          },
-          {
-            company: "Apple",
-            location: "Vancouver, BC",
-            position: "Software Engineer",
-            employmentType: "Full-time",
-            workMode: "Remote",
-            startDate: "",
-            endDate: "",
-            bullets: []
-          }
-        ]
-      },
-      projects: {
-        column: 1,
-        index: 1,
-        items: [
-          
-        ]
-      },
-      skills: {
-        column: 1,
-        index: 2,
-        items: [
-          
-        ]
-      },
-      education: {
-        column: 1,
-        index: 3,
-        items: [
-          
-        ]
-      }
+  const response = await fetcher<ResumeWithRelations>(`/api/resumes/${id}`, {
+    next: {
+      tags: [`resume-${id}`]
     }
-  };
+  });
 
+  if (!response.success) {
+    throw new Error(response.error);
+  }
+
+  if (!response.data) {
+    notFound();
+  }
+
+  const resume = response.data;
   const resumeBlob = await pdf(<ResumeDocument resume={resume} />).toBlob();
 
   return (

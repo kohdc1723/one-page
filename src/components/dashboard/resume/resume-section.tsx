@@ -3,8 +3,8 @@
 import { ChangeEvent, useState } from "react";
 import SearchInput from "./search-input";
 import { Button } from "@/components/ui/button";
-import Resume from "@/types/resume";
 import ResumeTable from "./resume-table";
+import { Resume } from "@prisma/client";
 
 interface ResumeSectionProps {
   resumes: Resume[];

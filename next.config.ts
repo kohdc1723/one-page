@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       "avatars.githubusercontent.com",
       "media.licdn.com"
     ]
-  },
+  }
 };
 
 export default nextConfig;

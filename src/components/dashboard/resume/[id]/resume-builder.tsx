@@ -7,11 +7,12 @@ import { useResizeObserver } from "usehooks-ts";
 import ResumeBuilderHeader from "./resume-builder-header";
 import ResumeEditor from "./resume-editor";
 import ResumeViewer from "./resume-viewer";
-import ResumeDocument from "./resume-document/resume-document";
-
+import ResumeDocument from "../../../resume-document/resume-document";
+import { ResumeWithRelations } from "@/types/resume";
+import { useResumeStore } from "@/store/use-resume-store";
 
 interface ResumeBuilderProps {
-  initialResume: any;
+  initialResume: ResumeWithRelations;
   initialResumeBlob: Blob;
 }
 
@@ -25,13 +26,14 @@ export default function ResumeBuilder({
     box: "border-box"
   });
 
-  const { title } = initialResume;
   const [resume, setResume] = useState(initialResume);
   const [resumeBlob, setResumeBlob] = useState(initialResumeBlob);
 
   const generatePdf = useCallback(async () => {
-    const blob = await pdf(<ResumeDocument resume={resume} />).toBlob();
-    setResumeBlob(blob);
+    if (resume) {
+      const blob = await pdf(<ResumeDocument resume={resume} />).toBlob();
+      setResumeBlob(blob);
+    }
   }, [resume]);
   
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function ResumeBuilder({
 
   return (
     <div className="flex flex-col w-full">
-      <ResumeBuilderHeader title={title} />
+      <ResumeBuilderHeader resume={resume} />
       <div className="h-[calc(100dvh-104px)] md:h-[calc(100dvh-56px)] flex flex-col md:flex-row">
         <ResumeEditor
           ref={innerRef}
