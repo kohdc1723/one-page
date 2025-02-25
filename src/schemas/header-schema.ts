@@ -7,9 +7,7 @@ export const HeaderSchema = z.object({
     .min(1, "resumeId is required"),
   location: z.string(),
   email: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
+  fullName: z.string(),
   phone: z.string(),
-  position: z.string(),
   links: z.array(z.string()),
 });

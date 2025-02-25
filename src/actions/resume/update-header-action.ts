@@ -1,11 +1,12 @@
 "use server";
 
+import * as z from "zod";
+import { revalidateTag } from "next/cache";
+
 import { prisma } from "@/lib/prisma";
 import { HeaderSchema } from "@/schemas/header-schema";
 import { SafeServerAction } from "@/types/actions";
 import { Header } from "@prisma/client";
-import { revalidateTag } from "next/cache";
-import * as z from "zod";
 
 export const updateHeaderAction: SafeServerAction<z.infer<typeof HeaderSchema>, Header> = async (values) => {
   const parsedValues = HeaderSchema.safeParse(values);

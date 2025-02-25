@@ -52,7 +52,7 @@ export default function ResumeDocument({ resume }: ResumeDocumentProps) {
 
   return (
     <Document
-      title="resume"
+      title={resume.title}
       pageLayout="singlePage"
     >
       <Page

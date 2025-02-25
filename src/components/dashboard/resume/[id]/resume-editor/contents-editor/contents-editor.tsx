@@ -5,18 +5,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ResumeWithRelations } from "@/types/resume";
-import HeaderForm from "./header-form";
-import { Dispatch, SetStateAction } from "react";
+import HeaderSection from "./header-section/header-section";
 
-interface ContentsTabProps {
+interface ContentsEditorProps {
   resume: ResumeWithRelations;
-  setResume: Dispatch<SetStateAction<ResumeWithRelations>>;
 }
 
-export default function ContentsTab({
-  resume,
-  setResume
-}: ContentsTabProps) {
+export default function ContentsEditor({ resume }: ContentsEditorProps) {
   const { header, sections } = resume;
 
   return (
@@ -32,20 +27,7 @@ export default function ContentsTab({
         ]}
       >
         {/* header */}
-        <AccordionItem
-          value="header"
-          className="border-slate-300"
-        >
-          <AccordionTrigger className="p-4 bg-emerald-900/5">
-            Header
-          </AccordionTrigger>
-          <AccordionContent className="p-4 border-t border-slate-300">
-            <HeaderForm
-              header={header}
-              setResume={setResume}
-            />
-          </AccordionContent>
-        </AccordionItem>
+        <HeaderSection header={header} />
 
         {/* work experience */}
         <AccordionItem

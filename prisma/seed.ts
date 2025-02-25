@@ -26,16 +26,15 @@ async function seed() {
       updated_at: new Date(),
       header: {
         create: {
-          firstName: "Elon",
-          lastName: "Musk",
+          fullName: "Elon Musk",
           location: "San Francisco, CA",
           phone: "+1 234-567-8901",
           email: "elon@tesla.com",
-          position: "Frontend Engineer",
           links: [
             "https://github.com/kohdc1723",
             "https://linkedin.com/in/kohdc1723",
           ],
+          isVisible: true,
         },
       },
     },
@@ -164,16 +163,15 @@ async function seed() {
       updated_at: new Date(),
       header: {
         create: {
-          firstName: "Musk",
-          lastName: "Elon",
+          fullName: "Elon Musk",
           location: "San Francisco, CA",
           phone: "+1 234-567-8901",
           email: "elon@tesla.com",
-          position: "Backend Engineer",
           links: [
             "https://github.com/kohdc1723",
             "https://linkedin.com/in/kohdc1723",
           ],
+          isVisible: true,
         },
       },
       sections: {

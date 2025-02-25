@@ -11,33 +11,33 @@ export default function Header({ header }: HeaderProps) {
   if (!header) return null;
 
   const {
-    firstName,
-    lastName,
+    fullName,
     location,
     email,
     phone,
     links
   } = header;
 
+  const contactArray = [
+    location,
+    email,
+    phone,
+    ...links
+  ].filter(Boolean);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.name}>
-          {firstName} {lastName}
-        </Text>
+        <View style={styles.nameContainer}>
+          <Text style={styles.name}>
+            {fullName}
+          </Text>
+        </View>
         <View style={styles.contactContainer}>
-          <Text>{location}</Text>
-          <Text>•</Text>
-          <Text>{email}</Text>
-          <Text>•</Text>
-          <Text>{phone}</Text>
-          {links.map((link: string, index: number) => (
-            <View
-              key={`${link}-${index}`}
-              style={styles.link}
-            >
-              <Text>•</Text>
-              <Text>{link}</Text>
+          {contactArray.map((item, index, array) => (
+            <View key={`contact-${index}`} style={styles.contactItem}>
+              <Text>{item}</Text>
+              {index < array.length - 1 && <Text>•</Text>}
             </View>
           ))}
         </View>
@@ -48,6 +48,12 @@ export default function Header({ header }: HeaderProps) {
 }
 
 const styles = StyleSheet.create({
+  nameContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 4
+  },
   name: {
     fontSize: 28,
     fontWeight: "bold",
@@ -64,13 +70,22 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: "center",
     gap: 4
   },
   contactContainer: {
+    width: "100%",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "",
     flexWrap: "wrap",
+    gap: 4,
+    rowGap: 1
+  },
+  contactItem: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4
   },
   horizontalLine: {

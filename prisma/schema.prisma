@@ -107,14 +107,13 @@ model Resume {
 }
 
 model Header {
-  id        String @id @default(cuid())
-  firstName String @map("first_name")
-  lastName  String @map("last_name")
+  id        String   @id @default(cuid())
+  fullName  String   @map("full_name")
   location  String
   phone     String
   email     String
-  position  String
   links     String[] @db.Text
+  isVisible Boolean  @default(true) @map("is_visible")
 
   resumeId String @unique @map("resume_id")
   resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
@@ -162,8 +161,8 @@ model EducationItem {
   bullets   String[]  @db.Text
   order     Int       @default(0)
 
-  user     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sectionId String @map("section_id")
+  user      User    @relation(fields: [userId], references: [id])
+  sectionId String  @map("section_id")
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   @@map("education_items")
@@ -198,8 +197,8 @@ model WorkExperienceItem {
   positions Position[]
   order     Int       @default(0)
 
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sectionId String @map("section_id")
+  user      User    @relation(fields: [userId], references: [id])
+  sectionId String  @map("section_id")
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   @@map("work_experience_items")
@@ -228,8 +227,8 @@ model SkillItem {
   skills   String[]
   order     Int       @default(0)
 
-  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sectionId String @map("section_id")
+  user      User    @relation(fields: [userId], references: [id])
+  sectionId String  @map("section_id")
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   @@map("skill_items")
@@ -245,8 +244,8 @@ model ProjectItem {
   bullets   String[]  @db.Text
   order     Int       @default(0)
 
-  user     User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sectionId String @map("section_id")
+  user      User    @relation(fields: [userId], references: [id])
+  sectionId String  @map("section_id")
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   @@map("project_items")

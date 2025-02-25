@@ -6,8 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { Resume } from "@prisma/client";
 import { SafeServerAction } from "@/types/actions";
 import { ResumeTitleSchema } from "@/schemas/resume-title-schema";
+import { revalidateTag } from "next/cache";
 
-export const updateResumeAction: SafeServerAction<z.infer<typeof ResumeTitleSchema>, Resume> = async (values) => {
+export const updateTitleAction: SafeServerAction<z.infer<typeof ResumeTitleSchema>, Resume> = async (values) => {
   const parsedValues = ResumeTitleSchema.safeParse(values);
 
   if (!parsedValues.success) {
@@ -26,6 +27,8 @@ export const updateResumeAction: SafeServerAction<z.infer<typeof ResumeTitleSche
         title: parsedValues.data.title
       }
     });
+
+    revalidateTag(`resume-${parsedValues.data.id}`);
 
     return {
       isSuccess: true,
