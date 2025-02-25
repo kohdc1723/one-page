@@ -19,7 +19,6 @@ const { auth } = NextAuth(authConfig);
 
 export default auth(async (req: NextAuthRequest) => {
   const { nextUrl } = req;
-  const session = req.auth;
 
   const isApiRoutes = nextUrl.pathname.startsWith(apiPrefix);
   const isApiAuthRoutes = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -34,10 +33,11 @@ export default auth(async (req: NextAuthRequest) => {
       secret: process.env.AUTH_SECRET,
       cookieName: "__Secure-authjs.session-token"
     });
-    console.log({ token, secret: process.env.AUTH_SECRET, session });
+
     if (!token) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
     const { sub: currentUserId } = token;
 
     const parts = nextUrl.pathname.split("/").slice(2);
@@ -49,6 +49,9 @@ export default auth(async (req: NextAuthRequest) => {
           return NextResponse.json({ message: "Forbidden" }, { status: 403 });
         }
 
+        break;
+      case "resumes":
+        // TODO: protect
         break;
       default:
         break;

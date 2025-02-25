@@ -51,8 +51,8 @@ export default {
       }
     })
   ],
-  // TODO: temp
   useSecureCookies: process.env.NODE_ENV === "production",
+  // TODO: remove if not needed
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
