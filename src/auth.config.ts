@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import Linkedin from "next-auth/providers/linkedin"; 
-import { compare } from "bcrypt-ts";
+import { compareSync } from "bcrypt-edge";
 
 import { LoginSchema } from "@/schemas/login-schema";
 import { getUserByEmailOrNull } from "./utils/user";
@@ -37,7 +37,7 @@ export default {
             return null;
           }
 
-          const isPasswordMatch = await compare(
+          const isPasswordMatch = compareSync(
             password,
             user.password
           );
