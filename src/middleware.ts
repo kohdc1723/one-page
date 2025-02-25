@@ -19,6 +19,7 @@ const { auth } = NextAuth(authConfig);
 
 export default auth(async (req: NextAuthRequest) => {
   const { nextUrl } = req;
+  const session = req.auth;
 
   const isApiRoutes = nextUrl.pathname.startsWith(apiPrefix);
   const isApiAuthRoutes = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -32,7 +33,7 @@ export default auth(async (req: NextAuthRequest) => {
       req,
       secret: process.env.AUTH_SECRET
     });
-    console.log({ token, secret: process.env.AUTH_SECRET });
+    console.log({ token, secret: process.env.AUTH_SECRET, session });
     if (!token) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
