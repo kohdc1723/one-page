@@ -3,7 +3,11 @@ import { Resume } from "@prisma/client";
 import ResumeSection from "@/components/dashboard/resume/resume-section";
 
 export default async function ResumePage() {
-  const response = await fetcher<Resume[]>("/api/resumes");
+  const response = await fetcher<Resume[]>("/api/resumes", {
+    next: {
+      tags: ["resumes"]
+    }
+  });
 
   if (response.success) {
     const resumes = response.data as Resume[];
