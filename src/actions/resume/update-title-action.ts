@@ -19,7 +19,7 @@ export const updateTitleAction: SafeServerAction<z.infer<typeof ResumeTitleSchem
   }
 
   try {
-    const { id } = values;
+    const { id } = parsedValues.data;
 
     const resume = await prisma.resume.update({
       where: { id },
@@ -28,8 +28,8 @@ export const updateTitleAction: SafeServerAction<z.infer<typeof ResumeTitleSchem
       }
     });
 
-    revalidateTag(`resume-${parsedValues.data.id}`);
-    revalidateTag("resumes");
+    revalidateTag(`resume-${id}`);
+    revalidateTag(`resumes-${resume.userId}`);
 
     return {
       isSuccess: true,
