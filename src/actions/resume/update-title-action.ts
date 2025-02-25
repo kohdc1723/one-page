@@ -29,6 +29,7 @@ export const updateTitleAction: SafeServerAction<z.infer<typeof ResumeTitleSchem
     });
 
     revalidateTag(`resume-${parsedValues.data.id}`);
+    revalidateTag("resumes");
 
     return {
       isSuccess: true,
