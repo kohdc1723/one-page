@@ -15,8 +15,6 @@ interface NextAuthRequest extends NextRequest {
   auth: Session | null;
 }
 
-const AUTH_SECRET = process.env.AUTH_SECRET;
-
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (req: NextAuthRequest) => {
@@ -30,8 +28,11 @@ export default auth(async (req: NextAuthRequest) => {
       return NextResponse.next();
     }
 
-    const token = await getToken({ req, secret: AUTH_SECRET });
-    console.log({ token });
+    const token = await getToken({
+      req,
+      secret: process.env.AUTH_SECRET
+    });
+    console.log({ token, secret: process.env.AUTH_SECRET });
     if (!token) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
