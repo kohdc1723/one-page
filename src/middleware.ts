@@ -31,6 +31,7 @@ export default auth(async (req: NextAuthRequest) => {
     }
 
     const token = await getToken({ req, secret: AUTH_SECRET });
+    console.log({ token });
     if (!token) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
