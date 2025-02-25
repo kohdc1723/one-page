@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { CgSpinner } from "react-icons/cg";
 
 import { emailVerificationAction } from "@/actions/auth/email-verification-action";
@@ -10,10 +9,11 @@ import FormResult from "../form-result";
 import { FormResult as FormResultType } from "@/types/form-result";
 import useServerAction from "@/hooks/use-server-action";
 
-export default function EmailVerificationForm() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+interface EmailVerificationFormProps {
+  token: string;
+}
 
+export default function EmailVerificationForm({ token }: EmailVerificationFormProps) {
   const [formResult, setFormResult] = useState<FormResultType>({
     success: false,
     message: undefined
