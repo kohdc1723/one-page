@@ -12,7 +12,6 @@ export default function EducationItem({ educationItem }: EducationItemProps) {
     field,
     startDate,
     endDate,
-    bullets,
     isCurrent,
     location
   } = educationItem;

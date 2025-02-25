@@ -12,7 +12,7 @@ interface ContentsEditorProps {
 }
 
 export default function ContentsEditor({ resume }: ContentsEditorProps) {
-  const { header, sections } = resume;
+  const { header } = resume;
 
   return (
     <div className="flex flex-col w-full text-sm font-medium">

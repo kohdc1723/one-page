@@ -40,7 +40,7 @@ export default function EmailVerificationForm() {
     if (success || message) return;
 
     await executeEmailVerification(token);
-  }, [token, formResult]);
+  }, [token, formResult, executeEmailVerification]);
 
   useEffect(() => {
     verify();
