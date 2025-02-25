@@ -2,7 +2,6 @@
 
 import * as z from "zod";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,10 +15,11 @@ import { newPasswordAction } from "@/actions/auth/new-password-action";
 import { FormResult as FormResultType } from "@/types/form-result";
 import useServerAction from "@/hooks/use-server-action";
 
-export default function NewPasswordForm() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+interface NewPasswordFormProps {
+  token: string;
+}
 
+export default function NewPasswordForm({ token }: NewPasswordFormProps) {
   const form = useForm<z.infer<typeof NewPasswordSchema>>({
     resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
