@@ -1,5 +1,5 @@
 import { EmploymentType, PrismaClient, SectionType, UserRole, WorkMode } from '@prisma/client';
-import bcrypt from "bcryptjs";
+import { hash } from "bcrypt-ts";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ async function seed() {
       email: "test@test.com", 
       emailVerified: new Date(),
       image: null,
-      password: await bcrypt.hash("Test1234!", 10),
+      password: await hash("Test1234!", 10),
       initial: "TT",
       role: UserRole.USER,
       isTwoFactorEnabled: false

@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import bcrypt from "bcryptjs";
+import { hash } from "bcrypt-ts";
 
 import { prisma } from "@/lib/prisma";
 import { PasswordSchema } from "@/schemas/password-schema";
@@ -18,7 +18,7 @@ export const updatePasswordAction: SafeServerAction<z.infer<typeof PasswordSchem
   }
 
   const { id, password } = parsedValues.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hash(password, 10);
 
   try {
     const user = await prisma.user.update({

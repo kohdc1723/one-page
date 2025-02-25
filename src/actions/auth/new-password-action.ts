@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import bcrypt from "bcryptjs";
+import { hash } from "bcrypt-ts";
 
 import { NewPasswordSchema } from "@/schemas/new-password-schema";
 import { getResetPasswordTokenByTokenOrNull } from "@/utils/reset-password-token";
@@ -11,7 +11,6 @@ import { SafeServerAction } from "@/types/actions";
 
 export const newPasswordAction: SafeServerAction<z.infer<typeof NewPasswordSchema>, undefined> = async (values) => {
   const { token } = values;
-  console.log(token)
 
   if (!token) {
     return {
@@ -58,7 +57,7 @@ export const newPasswordAction: SafeServerAction<z.infer<typeof NewPasswordSchem
     };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hash(password, 10);
 
   try {
     await prisma.user.update({

@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import bcrypt from "bcryptjs";
+import { hash } from "bcrypt-ts";
 
 import { prisma } from "@/lib/prisma";
 import { RegisterSchema } from "@/schemas/register-schema";
@@ -22,7 +22,7 @@ export const registerAction: SafeServerAction<z.infer<typeof RegisterSchema>, Us
   }
 
   const { email, name, password } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hash(password, 10);
 
   try {
     const existingUser = await getUserByEmailOrNull(email);
