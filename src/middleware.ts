@@ -31,7 +31,8 @@ export default auth(async (req: NextAuthRequest) => {
 
     const token = await getToken({
       req,
-      secret: process.env.AUTH_SECRET
+      secret: process.env.AUTH_SECRET,
+      cookieName: "__Secure-authjs.session-token"
     });
     console.log({ token, secret: process.env.AUTH_SECRET, session });
     if (!token) {
