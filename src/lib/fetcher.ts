@@ -25,6 +25,7 @@ export const fetcher = async <T>(
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}${url}`, {
+      credentials: "include",
       headers: mergedHeaders,
       ...requestInit
     });
